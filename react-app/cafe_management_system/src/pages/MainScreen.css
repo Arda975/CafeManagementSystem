@@ -1,0 +1,142 @@
+/* Genel Stil */
+body {
+    margin: 0;
+    padding: 0;
+
+}
+
+.main-screen {
+    position: relative;
+    height: 100vh; /* Tüm ekranı kapla */
+    overflow: hidden; /* Taşmaları gizle */
+    color: white;
+}
+
+/* Blurlu Arka Plan */
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/assets/cafe-image.jpg'); /* Cafe görseli */
+    background-size: cover; /* Görselin ekranı doldurması */
+    background-position: center; /* Görseli merkeze yerleştir */
+    filter: blur(3px); /* Blur efekti */
+    z-index: -1; /* İçeriğin arkasına yerleştir */
+}
+
+/* Admin İkonu */
+.user-icon {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.user-icon img {
+    width: 70px;
+    height: 70px;
+    background-color: transparent;
+    object-fit: fill;
+    border: none;
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
+/* Admin Giriş */
+.admin-login {
+    position: absolute;
+    top: 60px;
+    left: 20px;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    color: black;
+    z-index: 10;
+}
+
+.admin-login h3 {
+    margin: 0 0 10px 0;
+}
+
+.admin-login input {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.admin-login button {
+    background-color: #4caf50;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+/* Başlık */
+.cafe-title {
+    text-align: center;
+    font-size: 3em;
+    margin-top: 50px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+    font-family: "Lucida Handwriting", sans-serif;
+    font-size: 5rem;
+    margin-bottom: 200px;
+}
+
+/* Menü Kartları */
+.menu-cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 50px 0;
+}
+
+.menu-card {
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8); /* Şeffaf arka plan */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    flex: 1;
+    max-width: 150px;
+    text-align: center;
+    transition: 0.3s;
+    color: black;
+    text-decoration: none;
+}
+
+.menu-card:hover {
+    background-color: rgba(255, 255, 255, 1);
+    transform: scale(1.05);
+}
+
+/* Footer */
+.footer {
+    display: flex;
+    justify-content: space-around;
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.social {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.social img {
+    width: 20px;
+    height: 20px;
+}

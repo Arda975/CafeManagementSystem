@@ -1,0 +1,34 @@
+[
+  {
+    "ContainingType": "AmedimCafeAPI_Controllers.Cafe_Controller",
+    "Method": "GetDishes",
+    "RelativePath": "Cafe_/GetMenuWithCode",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "category_id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AmedimCafeAPI_Controllers.Cafe_Controller",
+    "Method": "InsertOrder",
+    "RelativePath": "Cafe_/InsertOrder",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "AmedimCafeApi.Models.OrderRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

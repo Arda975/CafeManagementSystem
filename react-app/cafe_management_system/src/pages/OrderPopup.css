@@ -1,0 +1,114 @@
+/* Sipariş butonu stil */
+.order-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px 30px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.order-button:hover {
+    background-color: #45a049;
+}
+
+/* Order Popup stil */
+.order-popup {
+    position: fixed;
+    top: 0;
+    right: -350px; /* Başlangıçta gizli */
+    width: 350px;
+    height: 100%;
+    background-color: #fff;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    transition: right 0.3s ease-in-out; /* Animasyon efekti */
+}
+
+/* Popup açıldığında sağa kayacak */
+.order-popup.open {
+    right: 0; /* Pop-up sağa kayar */
+}
+
+/* Pop-up içerik stil */
+.popup-content {
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* Başlık */
+.popup-content h3 {
+    text-align: center;
+    margin-top: 0;
+    font-size: 24px;
+    color: #333;
+}
+
+/* Sipariş öğeleri */
+.order-item {
+    display: flex;
+    margin-bottom: 15px;
+    background-color: yellow;
+    justify-content: center;
+    align-items: center;
+    border-radius: 25%;
+}
+
+/* Kapatma butonu */
+.close-button {
+    display: block;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+}
+
+.close-button:hover {
+    background-color: #d32f2f;
+}
+
+/* Siparişi Gönder butonu */
+.send-button {
+    display: block;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+}
+
+.send-button:hover {
+    background-color: #007bb5;
+}
+
+/* Masa numarası girişi */
+.table-id-input {
+    display: block;
+    margin: 10px 0;
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Hata mesajı */
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+}

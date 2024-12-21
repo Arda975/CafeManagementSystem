@@ -1,0 +1,70 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\arda_\\source\\repos\\AmedimCafeApi\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{72820BDB-0159-417E-928E-694595128A37}|AmedimCafeApi\\AmedimCafeApi.csproj|c:\\users\\arda_\\source\\repos\\amedimcafeapi\\amedimcafeapi\\controllers\\amedimcafeapi_controller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72820BDB-0159-417E-928E-694595128A37}|AmedimCafeApi\\AmedimCafeApi.csproj|solutionrelative:amedimcafeapi\\controllers\\amedimcafeapi_controller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72820BDB-0159-417E-928E-694595128A37}|AmedimCafeApi\\AmedimCafeApi.csproj|c:\\users\\arda_\\source\\repos\\amedimcafeapi\\amedimcafeapi\\models\\orderrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72820BDB-0159-417E-928E-694595128A37}|AmedimCafeApi\\AmedimCafeApi.csproj|solutionrelative:amedimcafeapi\\models\\orderrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72820BDB-0159-417E-928E-694595128A37}|AmedimCafeApi\\AmedimCafeApi.csproj|c:\\users\\arda_\\source\\repos\\amedimcafeapi\\amedimcafeapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72820BDB-0159-417E-928E-694595128A37}|AmedimCafeApi\\AmedimCafeApi.csproj|solutionrelative:amedimcafeapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\arda_\\source\\repos\\AmedimCafeApi\\AmedimCafeApi\\Program.cs",
+              "RelativeDocumentMoniker": "AmedimCafeApi\\Program.cs",
+              "ToolTip": "C:\\Users\\arda_\\source\\repos\\AmedimCafeApi\\AmedimCafeApi\\Program.cs",
+              "RelativeToolTip": "AmedimCafeApi\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAABPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-07T13:48:25.544Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "OrderRequest.cs",
+              "DocumentMoniker": "C:\\Users\\arda_\\source\\repos\\AmedimCafeApi\\AmedimCafeApi\\Models\\OrderRequest.cs",
+              "RelativeDocumentMoniker": "AmedimCafeApi\\Models\\OrderRequest.cs",
+              "ToolTip": "C:\\Users\\arda_\\source\\repos\\AmedimCafeApi\\AmedimCafeApi\\Models\\OrderRequest.cs",
+              "RelativeToolTip": "AmedimCafeApi\\Models\\OrderRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-21T16:29:19.996Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AmedimCafeAPI_Controller.cs",
+              "DocumentMoniker": "C:\\Users\\arda_\\source\\repos\\AmedimCafeApi\\AmedimCafeApi\\Controllers\\AmedimCafeAPI_Controller.cs",
+              "RelativeDocumentMoniker": "AmedimCafeApi\\Controllers\\AmedimCafeAPI_Controller.cs",
+              "ToolTip": "C:\\Users\\arda_\\source\\repos\\AmedimCafeApi\\AmedimCafeApi\\Controllers\\AmedimCafeAPI_Controller.cs",
+              "RelativeToolTip": "AmedimCafeApi\\Controllers\\AmedimCafeAPI_Controller.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD0AAABVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-18T11:23:01.776Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
