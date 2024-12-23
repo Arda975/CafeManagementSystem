@@ -1,9 +1,22 @@
 .snacks-page {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
+}
 
+.background-blur {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/assets/cafe-image.jpg'); /* Arka plan görseli */
+    background-size: cover;
+    background-position: center;
+    filter: blur(3px); /* Blurlu arka plan */
+    z-index: -1; /* İçeriğin arkasında kalması için */
 }
 
 .header {
@@ -12,24 +25,54 @@
     justify-content: space-between;
     width: 100%;
     padding: 20px;
-    margin-bottom: 100px;
-
+    margin-bottom: 20px;
 }
-.header img{
 
+.header img {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
     width: 20%;
 }
 
 .title {
-    font-size: 2rem;
-    color: #333;
-    font-family: "Lucida Handwriting", sans-serif;
-    font-size: 5rem;
+    position: absolute;
+    top: 20px;
+    right: 100px;
+    font-size: 36px; /* Büyük punto */
+    font-weight: bold; /* Kalın yazı */
+    color: #fff; /* Beyaz renk */
 }
 
-.subtitle {
-    font-size: 1.5rem;
-    color: #555;
+.menu-nav {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.menu-card {
+    width: 150px; /* Sabit genişlik */
+    height: 50px; /* Sabit yükseklik */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.8); /* Yarı saydam arka plan */
+    border-radius: 5px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.menu-card:hover {
+    background: rgba(255, 255, 255, 1);
+}
+
+.menu-card.selected {
+    background: rgba(200, 200, 200, 0.4); /* Seçili menü kartı için soluk renk */
 }
 
 .snacks-container {
@@ -45,7 +88,7 @@
     border-radius: 10px;
     padding: 15px;
     text-align: center;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.8);
 }
 
 .snack-image {
@@ -55,16 +98,21 @@
     border-radius: 8px;
 }
 
+.snack-details {
+    margin-top: 10px;
+}
+
 .snack-details h3 {
-    font-size: 18px;
+    font-size: 25px;
     font-weight: bold;
     margin: 10px 0;
 }
 
 .snack-details p {
-    font-size: 14px;
+    font-size: 20px;
     color: #555;
 }
+
 .order-controls {
     justify-content: center;
     width: 100%;

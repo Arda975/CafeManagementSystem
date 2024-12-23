@@ -39,14 +39,24 @@ const Drinks = () => {
 
     return (
         <div className="drinks-page">
+            {/* Blurlu Arka Plan */}
+            <div className="background-blur"></div>
+
             {/* Üst Menü */}
             <header className="header">
                 <Link to="/">
                     <img src="/assets/home-icon.png" alt="Home" className="home-icon" />
                 </Link>
                 <h1 className="title">AMEDİM CAFE</h1>
-                <h2 className="subtitle">İÇECEKLER</h2>
             </header>
+
+            {/* Menü Kartları */}
+            <nav className="menu-nav">
+                <Link to="/main-dishes" className="menu-card">Ana Yemekler</Link>
+                <Link to="/snacks" className="menu-card">Atıştırmalıklar</Link>
+                <Link to="/drinks" className="menu-card selected">İçecekler</Link>
+                <Link to="/desserts" className="menu-card">Tatlılar</Link>
+            </nav>
 
             {/* İçecekler Listesi */}
             <div className="drinks-container">

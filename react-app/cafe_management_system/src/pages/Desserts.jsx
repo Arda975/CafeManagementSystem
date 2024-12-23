@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useOrders } from "./OrderContext"; // Global sipariş yönetimini içeri alıyoruz
-import "./Desserts.css";
+import "./Desserts.css"; // Desserts'e özel CSS dosyası
 
 const Desserts = () => {
     const [desserts, setDesserts] = useState([]);
     const { orders, dispatch } = useOrders(); // Global state ve dispatch işlemleri
-
-    const categoryId = 1; // Desserts için category_id'yi 1 olarak belirledik
+    const categoryId = 1; // Desserts için category_id'yi sabitliyoruz
 
     useEffect(() => {
         const fetchDesserts = async () => {
@@ -26,24 +25,34 @@ const Desserts = () => {
         fetchDesserts();
     }, []); // Component mount olduğunda veriyi çekeriz
 
-    const addItem = (drinkName, price) => {
-        dispatch({ type: "ADD_ITEM", payload: { itemName: drinkName, price } });
+    const addItem = (dessertName, price) => {
+        dispatch({ type: "ADD_ITEM", payload: { itemName: dessertName, price } });
     };
 
-    const removeItem = (drinkName) => {
-        dispatch({ type: "REMOVE_ITEM", payload: { itemNameToRemove: drinkName } });
+    const removeItem = (dessertName) => {
+        dispatch({ type: "REMOVE_ITEM", payload: { itemNameToRemove: dessertName } });
     };
 
     return (
         <div className="desserts-page">
+            {/* Blurlu Arka Plan */}
+            <div className="background-blur"></div>
+
             {/* Üst Menü */}
             <header className="header">
                 <Link to="/">
                     <img src="/assets/home-icon.png" alt="Home" className="home-icon" />
                 </Link>
                 <h1 className="title">AMEDİM CAFE</h1>
-                <h2 className="subtitle">TATLILAR</h2>
             </header>
+
+            {/* Menü Kartları */}
+            <nav className="menu-nav">
+                <Link to="/main-dishes" className="menu-card">Ana Yemekler</Link>
+                <Link to="/snacks" className="menu-card">Atıştırmalıklar</Link>
+                <Link to="/drinks" className="menu-card">İçecekler</Link>
+                <Link to="/desserts" className="menu-card selected">Tatlılar</Link>
+            </nav>
 
             {/* Tatlılar Listesi */}
             <div className="desserts-container">
@@ -51,7 +60,7 @@ const Desserts = () => {
                     desserts.map((dessert, index) => (
                         <div className="dessert-card" key={index}>
                             <img
-                                src={dessert.image || "/assets/default-image.png"} // Eğer image gelmezse varsayılan bir resim kullan
+                                src={dessert.image || "/assets/default-dessert.png"}
                                 alt={dessert.itemname}
                                 className="dessert-image"
                             />
@@ -72,7 +81,6 @@ const Desserts = () => {
                     <p>No desserts found for the given category.</p>
                 )}
             </div>
-
         </div>
     );
 };

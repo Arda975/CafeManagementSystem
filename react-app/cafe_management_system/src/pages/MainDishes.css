@@ -1,42 +1,92 @@
-.main-dishes-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
+/* Genel Ayarlar */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #ffffff; /* Grimsi arka plan */
+    transition: background-color 0.3s ease; /* Arka plan renk geçişi */
+    overflow-x: hidden; /* Sağ kaymayı engelliyoruz */
 }
 
+/* Üst Menü */
 .header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    width: 100%;
+    justify-content: flex-start; /* Flex-start, öğeleri sola hizalar */
     padding: 20px;
-    margin-bottom: 100px;
+    background-color: #ffffff; /* Aynı arka plan rengi */
+    box-shadow: none; /* Gölgeleme kaldırıldı */
+    transition: background-color 0.3s ease; /* Header arka plan geçişi */
 }
-.header img{
-    padding: 5px 10px;
-    border: none;
-    border-radius: 3px;
+
+.home-icon {
+    width: 50px;
+    height: 50px;
+    margin-right: 20px;
     cursor: pointer;
-
-    width: 20%;
 }
 
+/* Menü Başlığı */
+.menu-title {
+    font-family: 'Lucida Handwriting', cursive;
+    font-size: 36px;
+    color: #333;
+    margin: 0;
+    margin-left: 20px; /* Menü başlığını sola kaydırmak için */
+}
+
+/* Menü Kategorileri */
+.menu-nav {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px 0;
+    transition: margin 0.3s ease; /* Menü geçişi */
+}
+
+.menu-card {
+    padding: 10px 20px;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    text-align: center;
+}
+
+.menu-card.selected {
+    background: #000000;
+    color: #fff;
+}
+
+.menu-card:hover {
+    background-color: #000000;
+    color: #000;
+}
+
+/* Yemek Kartları */
 .dishes-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
+    padding: 20px;
 }
 
 .dish-card {
     width: 250px;
+    height: 400px;
     background: #f9f9f9;
-    border-radius: 10px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
     padding: 15px;
     text-align: center;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease; /* Gölgelendirme geçişi */
 }
+
+
 
 .dish-image {
     width: 100%;
@@ -47,52 +97,68 @@
 
 .dish-details {
     margin-top: 10px;
+    text-align: left;
+    background-color: #333;
+    padding: 10px;
+    border-radius: 8px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(100% - 160px);
 }
 
-.dish-details h3 {
-    font-size: 18px;
+.dish-name {
+    font-size: 20px;
     font-weight: bold;
     margin: 10px 0;
+    color: #fff;
 }
 
-.dish-details p {
+.dish-description {
     font-size: 14px;
-    color: #555;
+    color: #fff;
+    flex-grow: 1;
+}
+
+/* Fiyat ve Sipariş Kontrolleri */
+.price-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    color: white;
+}
+
+.dish-price {
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
 }
 
 .order-controls {
-    justify-content: center;
-    width: 100%;
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 10px;
 }
 
 .order-controls button {
-    background-color: #f0c040;
+    background-color: white;
+    color: #333;
     border: none;
+    padding: 5px 10px;
     border-radius: 5px;
-    color: #fff;
-    font-size: 18px;
-    font-weight: bold;
-    padding: 10px 15px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease; /* Buton geçişi */
 }
 
 .order-controls button:hover {
-    background-color: #d89c30;
+    background-color: #f0c040;
 }
 
-.order-controls button:active {
-    background-color: #bf8725;
-}
-
-.order-controls span {
-    font-size: 18px;
+.dish-quantity {
+    font-size: 16px;
     font-weight: bold;
-    color: #333;
-    min-width: 20px;
-    text-align: center;
+    color: white;
+    display: inline-block;
 }

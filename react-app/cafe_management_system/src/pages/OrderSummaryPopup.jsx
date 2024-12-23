@@ -63,9 +63,11 @@ const OrderSummaryPopup = () => {
 
     return (
         <div>
-            <button className="order-button" onClick={togglePopup}>
-                Siparişimi Göster
-            </button>
+            {Object.keys(orders).length > 0 && (
+                <button className="order-button" onClick={togglePopup}>
+                    Siparişimi Göster
+                </button>
+            )}
 
             <div className={`order-popup ${isOpen ? "open" : ""}`}>
                 <div className="popup-content">

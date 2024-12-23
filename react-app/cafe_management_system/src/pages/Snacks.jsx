@@ -25,24 +25,34 @@ const Snacks = () => {
         fetchSnacks();
     }, []); // Component mount olduğunda veriyi çekeriz
 
-    const addItem = (drinkName, price) => {
-        dispatch({ type: "ADD_ITEM", payload: { itemName: drinkName, price } });
+    const addItem = (snackName, price) => {
+        dispatch({ type: "ADD_ITEM", payload: { itemName: snackName, price } });
     };
 
-    const removeItem = (drinkName) => {
-        dispatch({ type: "REMOVE_ITEM", payload: { itemNameToRemove: drinkName } });
+    const removeItem = (snackName) => {
+        dispatch({ type: "REMOVE_ITEM", payload: { itemNameToRemove: snackName } });
     };
 
     return (
         <div className="snacks-page">
+            {/* Blurlu Arka Plan */}
+            <div className="background-blur"></div>
+
             {/* Üst Menü */}
             <header className="header">
                 <Link to="/">
                     <img src="/assets/home-icon.png" alt="Home" className="home-icon" />
                 </Link>
                 <h1 className="title">AMEDİM CAFE</h1>
-                <h2 className="subtitle">ATIŞTIRMALIKLAR</h2>
             </header>
+
+            {/* Menü Kartları */}
+            <nav className="menu-nav">
+                <Link to="/main-dishes" className="menu-card">Ana Yemekler</Link>
+                <Link to="/snacks" className="menu-card selected">Atıştırmalıklar</Link>
+                <Link to="/drinks" className="menu-card">İçecekler</Link>
+                <Link to="/desserts" className="menu-card">Tatlılar</Link>
+            </nav>
 
             {/* Atıştırmalık Listesi */}
             <div className="snacks-container">
@@ -71,7 +81,6 @@ const Snacks = () => {
                     <p>No snacks found for the given category.</p>
                 )}
             </div>
-
         </div>
     );
 };
