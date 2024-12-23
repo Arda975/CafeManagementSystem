@@ -1205,11 +1205,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\arda_\\source\\repos\\AmedimCafeApi\\AmedimCafeApi\\AmedimCafeApi.csproj",
+      "projectUniqueName": "C:\\Users\\arda_\\KOD DOSYALARI\\CafeManagementSystem\\api\\AmedimCafeApi\\AmedimCafeApi\\AmedimCafeApi.csproj",
       "projectName": "AmedimCafeApi",
-      "projectPath": "C:\\Users\\arda_\\source\\repos\\AmedimCafeApi\\AmedimCafeApi\\AmedimCafeApi.csproj",
+      "projectPath": "C:\\Users\\arda_\\KOD DOSYALARI\\CafeManagementSystem\\api\\AmedimCafeApi\\AmedimCafeApi\\AmedimCafeApi.csproj",
       "packagesPath": "C:\\Users\\arda_\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\arda_\\source\\repos\\AmedimCafeApi\\AmedimCafeApi\\obj\\",
+      "outputPath": "C:\\Users\\arda_\\KOD DOSYALARI\\CafeManagementSystem\\api\\AmedimCafeApi\\AmedimCafeApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\arda_\\AppData\\Roaming\\NuGet\\NuGet.Config",

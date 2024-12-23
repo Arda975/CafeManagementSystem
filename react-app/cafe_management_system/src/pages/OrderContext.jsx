@@ -21,7 +21,7 @@ const orderReducer = (state, action) => {
             const { itemNameToRemove } = action.payload;
             const updatedState = { ...state };
             if (updatedState[itemNameToRemove]) {
-                const newQuantity = updatedState[itemNameToRemove].quantity - 1;
+                const newQuantity = updatedState[itemNameToRemove].quantity - 0.5;
                 if (newQuantity <= 0) {
                     delete updatedState[itemNameToRemove]; // Quantity 0 ise öğe tamamen silinsin
                 } else {

@@ -41,9 +41,16 @@ const MainDishes = () => {
                 <Link to="/">
                     <img src="/assets/home-icon.png" alt="Home" className="home-icon" />
                 </Link>
-                <h1 className="title">AMEDİM CAFE</h1>
-                <h2 className="subtitle">ANA YEMEKLER</h2>
+                <h1 className="menu-title">Menü</h1>
             </header>
+
+            {/* Menü Kategorileri */}
+            <nav className="menu-nav">
+                <Link to="/main-dishes" className="menu-card selected">Ana Yemekler</Link>
+                <Link to="/snacks" className="menu-card">Atıştırmalıklar</Link>
+                <Link to="/drinks" className="menu-card">İçecekler</Link>
+                <Link to="/desserts" className="menu-card">Tatlılar</Link>
+            </nav>
 
             {/* Ana Yemekler Listesi */}
             <div className="dishes-container">
@@ -56,20 +63,27 @@ const MainDishes = () => {
                                 className="dish-image"
                             />
                             <div className="dish-details">
-                                <h3>{dish.itemname}</h3>
-                                <p>İçindekiler: {dish.description}</p>
-                                <p>Fiyat: {dish.price} TL</p>
-                                {/* Sipariş butonları */}
-                                <div className="order-controls">
-                                    <button onClick={() => removeItem(dish.itemname)}>-</button>
-                                    <span>{orders[dish.itemname]?.quantity || 0}</span>
-                                    <button onClick={() => addItem(dish.itemname, dish.price)}>+</button>
+                                <h3 className="dish-name">{dish.itemname}</h3>
+                                <p className="dish-description">
+                                    İçindekiler: {dish.description}
+                                </p>
+                                <div className="price-controls">
+                                    <p className="dish-price">
+                                        Fiyat: {dish.price} TL
+                                    </p>
+                                    <div className="order-controls">
+                                        <button onClick={() => removeItem(dish.itemname)}>-</button>
+                                        <p className="dish-quantity">
+                                            {orders[dish.itemname]?.quantity || 0}
+                                        </p>
+                                        <button onClick={() => addItem(dish.itemname, dish.price)}>+</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     ))
                 ) : (
-                    <p>No dishes found for the given category.</p>
+                    <p>Üzgünüz, şu anda bu kategoride yemek bulunmuyor.</p>
                 )}
             </div>
         </div>

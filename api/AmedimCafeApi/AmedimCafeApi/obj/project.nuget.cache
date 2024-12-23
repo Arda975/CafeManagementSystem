@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "wnX2UQlFQ2w=",
+  "dgSpecHash": "23H7SDWVBVM=",
   "success": true,
-  "projectFilePath": "C:\\Users\\arda_\\source\\repos\\AmedimCafeApi\\AmedimCafeApi\\AmedimCafeApi.csproj",
+  "projectFilePath": "C:\\Users\\arda_\\KOD DOSYALARI\\CafeManagementSystem\\api\\AmedimCafeApi\\AmedimCafeApi\\AmedimCafeApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\arda_\\.nuget\\packages\\dapper\\2.1.35\\dapper.2.1.35.nupkg.sha512",
     "C:\\Users\\arda_\\.nuget\\packages\\microsoft.entityframeworkcore\\9.0.0\\microsoft.entityframeworkcore.9.0.0.nupkg.sha512",
