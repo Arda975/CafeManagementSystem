@@ -35,50 +35,63 @@ const Desserts = () => {
 
     return (
         <div className="desserts-page">
-            {/* Blurlu Arka Plan */}
-            <div className="background-blur"></div>
+            {/* Navigation Bar */}
+            <div className="navbar">
+                <div className="navbar-left">
+                    <span className="cafe-name">Amedim Cafe</span>
+                </div>
+                <div className="navbar-right">
+                    <Link to="/" className="nav-link">Ana Sayfa</Link>
+                    <Link to="/about" className="nav-link">Hakkımızda</Link>
+                    <Link to="/main-dishes" className="menu-button">Menü</Link>
+                </div>
+            </div>
 
-            {/* Üst Menü */}
-            <header className="header">
-                <Link to="/">
-                    <img src="/assets/home-icon.png" alt="Home" className="home-icon" />
-                </Link>
-                <h1 className="title">AMEDİM CAFE</h1>
-            </header>
+            {/* Menu Title */}
+            <h1 className="menu-title">Menümüz</h1>
 
-            {/* Menü Kartları */}
+            {/* Menu Navigation (Categories as Buttons) */}
             <nav className="menu-nav">
-                <Link to="/main-dishes" className="menu-card">Ana Yemekler</Link>
-                <Link to="/snacks" className="menu-card">Atıştırmalıklar</Link>
-                <Link to="/drinks" className="menu-card">İçecekler</Link>
-                <Link to="/desserts" className="menu-card selected">Tatlılar</Link>
+                <Link to="/main-dishes">
+                    <button className="menu-button">Ana Yemekler</button>
+                </Link>
+                <Link to="/snacks">
+                    <button className="menu-button">Atıştırmalıklar</button>
+                </Link>
+                <Link to="/drinks">
+                    <button className="menu-button">İçecekler</button>
+                </Link>
+                <Link to="/desserts">
+                    <button className="menu-button-selected">Tatlılar</button>
+                </Link>
             </nav>
 
             {/* Tatlılar Listesi */}
-            <div className="desserts-container">
+            <div className="dishes-container">
                 {desserts.length > 0 ? (
                     desserts.map((dessert, index) => (
-                        <div className="dessert-card" key={index}>
+                        <div className="dish-card" key={index}>
                             <img
                                 src={dessert.image || "/assets/default-dessert.png"}
                                 alt={dessert.itemname}
-                                className="dessert-image"
+                                className="dish-image"
                             />
-                            <div className="dessert-details">
-                                <h3>{dessert.itemname}</h3>
-                                <p>İçindekiler: {dessert.description}</p>
-                                <p>Fiyat: {dessert.price} TL</p>
-                                {/* Sipariş butonları */}
-                                <div className="order-controls">
-                                    <button onClick={() => removeItem(dessert.itemname)}>-</button>
-                                    <span>{orders[dessert.itemname]?.quantity || 0}</span>
-                                    <button onClick={() => addItem(dessert.itemname, dessert.price)}>+</button>
+                            <div className="dish-details">
+                                <h3 className="dish-name">{dessert.itemname}</h3>
+                                <p className="dish-description">İçindekiler: {dessert.description}</p>
+                                <div className="price-controls">
+                                    <p className="dish-price">Fiyat: {dessert.price} TL</p>
+                                    <div className="order-controls">
+                                        <button onClick={() => removeItem(dessert.itemname)}>-</button>
+                                        <p className="dish-quantity">{orders[dessert.itemname]?.quantity || 0}</p>
+                                        <button onClick={() => addItem(dessert.itemname, dessert.price)}>+</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     ))
                 ) : (
-                    <p>No desserts found for the given category.</p>
+                    <p>Üzgünüz, şu anda bu kategoride tatlı bulunmuyor.</p>
                 )}
             </div>
         </div>

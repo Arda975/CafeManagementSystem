@@ -71,7 +71,7 @@ const OrderSummaryPopup = () => {
 
             <div className={`order-popup ${isOpen ? "open" : ""}`}>
                 <div className="popup-content">
-                    <h3>Önizleme</h3>
+                    <h3>Sipariş Özeti</h3>
                     <div>
                         <label htmlFor="tableId">Masa Numarası:</label>
                         <input

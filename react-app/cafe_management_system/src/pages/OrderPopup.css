@@ -2,9 +2,9 @@
 .order-button {
     position: fixed;
     bottom: 45px;
-    right: 20px;
+    left: 20px; /* Sol alt köşeye yerleştirildi */
     padding: 15px 30px;
-    background-color: #4CAF50;
+    background: linear-gradient(to right, black, grey); /* Gradient renk */
     color: white;
     border: none;
     border-radius: 50px;
@@ -14,7 +14,7 @@
 }
 
 .order-button:hover {
-    background-color: #45a049;
+    background: linear-gradient(to right, #333, #888); /* Hoverda daha koyu gradient */
 }
 
 /* Order Popup stil */
@@ -24,8 +24,8 @@
     right: -350px; /* Başlangıçta gizli */
     width: 350px;
     height: 100%;
-    background-color: #fff;
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(to bottom, #00ffd8, #8b64a1); /* Siyah ile gri arasında geçiş */
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.7);
     z-index: 1000;
     transition: right 0.3s ease-in-out; /* Animasyon efekti */
 }
@@ -53,10 +53,12 @@
 .order-item {
     display: flex;
     margin-bottom: 15px;
-    background-color: yellow;
+    background: linear-gradient(to bottom right, #ffae00, #00ffa5); /* Siyah ile gri arasında geçiş */
     justify-content: center;
     align-items: center;
-    border-radius: 5%;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
 }
 
 /* Kapatma butonu */
@@ -64,12 +66,13 @@
     display: block;
     margin-top: 20px;
     padding: 10px;
-    background-color: #f44336;
+    background: linear-gradient(to bottom right, black, red); /* Siyah ile gri arasında geçiş */
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 20px;
+    font-weight: bold;
     width: 100%;
 }
 
@@ -82,12 +85,13 @@
     display: block;
     margin-top: 10px;
     padding: 10px;
-    background-color: #008CBA;
+    background: linear-gradient(to bottom right, #008CBA, #000000);
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 19px;
+    font-weight: bold;
     width: 100%;
 }
 

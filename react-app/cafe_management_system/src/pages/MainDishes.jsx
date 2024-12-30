@@ -7,7 +7,6 @@ import "./MainDishes.css";
 const MainDishes = () => {
     const [dishes, setDishes] = useState([]);
     const { orders, dispatch } = useOrders(); // Global state ve dispatch işlemleri
-
     const categoryId = 2; // category_id'yi sabitliyoruz
 
     useEffect(() => {
@@ -36,20 +35,35 @@ const MainDishes = () => {
 
     return (
         <div className="main-dishes-page">
-            {/* Üst Menü */}
-            <header className="header">
-                <Link to="/">
-                    <img src="/assets/home-icon.png" alt="Home" className="home-icon" />
-                </Link>
-                <h1 className="menu-title">Menü</h1>
-            </header>
+            {/* Navigation Bar */}
+            <div className="navbar">
+                <div className="navbar-left">
+                    <span className="cafe-name">Amedim Cafe</span>
+                </div>
+                <div className="navbar-right">
+                    <Link to="/" className="nav-link">Ana Sayfa</Link>
+                    <Link to="/about" className="nav-link">Hakkımızda</Link>
+                    <Link to="/main-dishes" className="menu-button">Menü</Link>
+                </div>
+            </div>
 
-            {/* Menü Kategorileri */}
+            {/* Menu Title */}
+            <h1 className="menu-title">Menümüz</h1>
+
+            {/* Menu Navigation (Categories as Buttons) */}
             <nav className="menu-nav">
-                <Link to="/main-dishes" className="menu-card selected">Ana Yemekler</Link>
-                <Link to="/snacks" className="menu-card">Atıştırmalıklar</Link>
-                <Link to="/drinks" className="menu-card">İçecekler</Link>
-                <Link to="/desserts" className="menu-card">Tatlılar</Link>
+                <Link to="/main-dishes">
+                    <button className="menu-button-selected">Ana Yemekler</button>
+                </Link>
+                <Link to="/snacks">
+                    <button className="menu-button">Atıştırmalıklar</button>
+                </Link>
+                <Link to="/drinks">
+                    <button className="menu-button">İçecekler</button>
+                </Link>
+                <Link to="/desserts">
+                    <button className="menu-button">Tatlılar</button>
+                </Link>
             </nav>
 
             {/* Ana Yemekler Listesi */}
@@ -64,18 +78,12 @@ const MainDishes = () => {
                             />
                             <div className="dish-details">
                                 <h3 className="dish-name">{dish.itemname}</h3>
-                                <p className="dish-description">
-                                    İçindekiler: {dish.description}
-                                </p>
+                                <p className="dish-description">İçindekiler: {dish.description}</p>
                                 <div className="price-controls">
-                                    <p className="dish-price">
-                                        Fiyat: {dish.price} TL
-                                    </p>
+                                    <p className="dish-price">Fiyat: {dish.price} TL</p>
                                     <div className="order-controls">
                                         <button onClick={() => removeItem(dish.itemname)}>-</button>
-                                        <p className="dish-quantity">
-                                            {orders[dish.itemname]?.quantity || 0}
-                                        </p>
+                                        <p className="dish-quantity">{orders[dish.itemname]?.quantity || 0}</p>
                                         <button onClick={() => addItem(dish.itemname, dish.price)}>+</button>
                                     </div>
                                 </div>

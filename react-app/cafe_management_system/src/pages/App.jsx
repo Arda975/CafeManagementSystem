@@ -6,6 +6,7 @@ import Drinks from "./Drinks";
 import Snacks from "./Snacks";
 import Desserts from "./Desserts";
 import OrderSummaryPopup from "./OrderSummaryPopup";
+import About from "./About";
 import MainScreen from "./MainScreen.jsx";
 
 const App = () => {
@@ -18,6 +19,7 @@ const App = () => {
                     <Route path="/drinks" element={<Drinks />} />
                     <Route path="/snacks" element={<Snacks />} />
                     <Route path="/desserts" element={<Desserts />} />
+                    <Route path="/about" element={<About />} />
                 </Routes>
                 <OrderSummaryPopup />
             </Router>

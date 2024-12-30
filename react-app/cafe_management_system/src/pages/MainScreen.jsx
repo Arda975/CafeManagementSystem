@@ -40,6 +40,7 @@ function MainScreen() {
                 <div className="hero-content">
                     <h1 className="hero-title">Her Lokma Değerli</h1>
                     <p className="hero-subtitle">Lezzetli yemeklerimizle her anınıza değer katıyoruz.</p>
+                    <Link to="/main-dishes" className="hero-order-button">Sipariş Et</Link>
                 </div>
             </div>
 
