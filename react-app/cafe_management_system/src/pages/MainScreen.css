@@ -94,11 +94,13 @@ body, html {
 }
 
 .hero-title {
+    color: white;
     font-size: 50px;
     font-family: 'Lucida Handwriting', cursive; /* El yazısı fontu */
 }
 
 .hero-subtitle {
+    color: white;
     font-size: 24px;
     margin-top: 20px;
 }
@@ -160,4 +162,108 @@ body, html {
 
 .dot:hover {
     background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Admin Icon */
+.admin-icon {
+    font-size: 24px;
+    color: #007BFF;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.admin-icon:hover {
+    transform: scale(1.2); /* Hover animasyonu */
+}
+
+/* Admin Login Form */
+.admin-login-form {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: #fff;
+    width: 300px;
+    padding: 20px;
+    border-left: 2px solid #ccc;
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+    transition: all 0.3s ease;
+}
+
+.navbar.shifted + .admin-login-form {
+    display: flex; /* Formu görünür yap */
+}
+
+.admin-login-form input {
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.admin-login-form input:focus {
+    border-color: #007BFF; /* Input odaklandığında renk değişimi */
+    outline: none;
+}
+
+.admin-login-form button {
+    background-color: #28a745;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.admin-login-form button:hover {
+    background-color: #218838;
+    transform: scale(1.05); /* Hover'da butonu büyütme */
+}
+
+/* Giriş Formunun Yüksekliği ve Dikey Ortalanması */
+.admin-login-form {
+    margin-top: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Admin Login Form Başlık */
+.admin-login-form h2 {
+
+    margin-bottom: 20px;
+    font-size: 22px;
+    color: #333;
+    text-align: center;
+}
+
+/* Admin Form Etiketi ve Input */
+.admin-login-form label {
+    align-self: flex-start;
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+}
+
+.admin-login-form input {
+    margin-bottom: 15px;
+}
+
+/* Admin Login Button Icon */
+.navbar-right {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    position: relative;
+}
+
+.navbar-right .admin-icon {
+    margin-left: auto; /* Sağ tarafa hizalama */
 }

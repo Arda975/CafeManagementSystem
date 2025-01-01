@@ -8,6 +8,11 @@ import Desserts from "./Desserts";
 import OrderSummaryPopup from "./OrderSummaryPopup";
 import About from "./About";
 import MainScreen from "./MainScreen.jsx";
+import AdminScreen from "./AdminScreen.jsx";
+import Tables from "./Tables.jsx";
+import ProductManagement from "./ProductManagement.jsx";
+import AdminSettings from "./AdminSettings.jsx";
+
 
 const App = () => {
     return (
@@ -20,6 +25,10 @@ const App = () => {
                     <Route path="/snacks" element={<Snacks />} />
                     <Route path="/desserts" element={<Desserts />} />
                     <Route path="/about" element={<About />} />
+                    <Route path="/adminscreen" element={<AdminScreen />} />
+                    <Route path="/Tables" element={<Tables />} />
+                    <Route path="/productmanagement" element={<ProductManagement />} />
+                    <Route path="/adminsettings" element={<AdminSettings />} />
                 </Routes>
                 <OrderSummaryPopup />
             </Router>

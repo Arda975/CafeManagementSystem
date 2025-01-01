@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\arda_\\KOD DOSYALARI\\CafeManagementSystem\\api\\AmedimCafeApi\\AmedimCafeApi\\AmedimCafeApi.csproj": {}
+    "C:\\Users\\ramo_\\Desktop\\react\\CafeManagementSystem\\api\\AmedimCafeApi\\AmedimCafeApi\\AmedimCafeApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\arda_\\KOD DOSYALARI\\CafeManagementSystem\\api\\AmedimCafeApi\\AmedimCafeApi\\AmedimCafeApi.csproj": {
+    "C:\\Users\\ramo_\\Desktop\\react\\CafeManagementSystem\\api\\AmedimCafeApi\\AmedimCafeApi\\AmedimCafeApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\arda_\\KOD DOSYALARI\\CafeManagementSystem\\api\\AmedimCafeApi\\AmedimCafeApi\\AmedimCafeApi.csproj",
+        "projectUniqueName": "C:\\Users\\ramo_\\Desktop\\react\\CafeManagementSystem\\api\\AmedimCafeApi\\AmedimCafeApi\\AmedimCafeApi.csproj",
         "projectName": "AmedimCafeApi",
-        "projectPath": "C:\\Users\\arda_\\KOD DOSYALARI\\CafeManagementSystem\\api\\AmedimCafeApi\\AmedimCafeApi\\AmedimCafeApi.csproj",
-        "packagesPath": "C:\\Users\\arda_\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\arda_\\KOD DOSYALARI\\CafeManagementSystem\\api\\AmedimCafeApi\\AmedimCafeApi\\obj\\",
+        "projectPath": "C:\\Users\\ramo_\\Desktop\\react\\CafeManagementSystem\\api\\AmedimCafeApi\\AmedimCafeApi\\AmedimCafeApi.csproj",
+        "packagesPath": "C:\\Users\\ramo_\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ramo_\\Desktop\\react\\CafeManagementSystem\\api\\AmedimCafeApi\\AmedimCafeApi\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\arda_\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ramo_\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,7 +26,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -82,7 +85,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.404/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
