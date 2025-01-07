@@ -12,6 +12,7 @@ import AdminScreen from "./AdminScreen.jsx";
 import Tables from "./Tables.jsx";
 import ProductManagement from "./ProductManagement.jsx";
 import AdminSettings from "./AdminSettings.jsx";
+import Payment from "./Payment.jsx";
 
 
 const App = () => {
@@ -29,6 +30,8 @@ const App = () => {
                     <Route path="/Tables" element={<Tables />} />
                     <Route path="/productmanagement" element={<ProductManagement />} />
                     <Route path="/adminsettings" element={<AdminSettings />} />
+                    <Route path="/payment/:id" element={<Payment />} />
+
                 </Routes>
                 <OrderSummaryPopup />
             </Router>

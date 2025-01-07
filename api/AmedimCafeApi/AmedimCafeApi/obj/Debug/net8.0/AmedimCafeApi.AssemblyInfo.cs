@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AmedimCafeApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e0c8e3d79a9af2b725846533ea2ccd2f9ebc0dfc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c944c32f67ea4b06a39d463649a24241549a4af4")]
 [assembly: System.Reflection.AssemblyProductAttribute("AmedimCafeApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AmedimCafeApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

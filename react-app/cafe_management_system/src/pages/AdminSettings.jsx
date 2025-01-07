@@ -1,48 +1,66 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // useNavigate hook'unu import edin
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './AdminSettings.css';
 
 const AdminSettings = () => {
-  const navigate = useNavigate();  // useNavigate'i kullanarak navigate fonksiyonunu alıyoruz
-  const [selectedUser, setSelectedUser] = useState('');
+  const navigate = useNavigate();
+  const [selectedUser, setSelectedUser] = useState(null);
   const [newUsername, setNewUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [users, setUsers] = useState([
-    { id: 1, username: 'user1', password: 'password1' },
-    { id: 2, username: 'user2', password: 'password2' },
-    { id: 3, username: 'user3', password: 'password3' }
-  ]);
+  const [users, setUsers] = useState([]);
+
+  // Kullanıcıları API'den çek
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/users');
+        const data = await response.json();
+        setUsers(data);
+      } catch (error) {
+        console.error('Kullanıcılar yüklenemedi:', error);
+      }
+    };
+    fetchUsers();
+  }, []);
 
   const handleUserChange = (e) => {
     const userId = e.target.value;
     const user = users.find((user) => user.id === parseInt(userId));
-    setSelectedUser(user ? user.username : '');
+    setSelectedUser(user || null);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!selectedUser) {
       alert('Lütfen bir kullanıcı seçin!');
       return;
     }
-    
-    if (newUsername) {
-      const updatedUsers = users.map(user =>
-        user.username === selectedUser ? { ...user, username: newUsername } : user
-      );
-      setUsers(updatedUsers);
-    }
 
-    if (newPassword) {
-      const updatedUsers = users.map(user =>
-        user.username === selectedUser ? { ...user, password: newPassword } : user
-      );
-      setUsers(updatedUsers);
-    }
+    try {
+      const updatedData = {};
+      if (newUsername) updatedData.username = newUsername;
+      if (newPassword) updatedData.password = newPassword;
 
-    alert('Kullanıcı bilgileri başarıyla güncellendi!');
-    setNewUsername('');
-    setNewPassword('');
-    setSelectedUser('');
+      const response = await fetch(`http://localhost:5000/api/users/${selectedUser.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (response.ok) {
+        alert('Kullanıcı bilgileri başarıyla güncellendi!');
+        setNewUsername('');
+        setNewPassword('');
+        setSelectedUser(null);
+
+        // Kullanıcı listesini güncelle
+        const updatedUsers = await response.json();
+        setUsers(updatedUsers);
+      } else {
+        throw new Error('Güncelleme sırasında bir hata oluştu.');
+      }
+    } catch (error) {
+      console.error('Kullanıcı bilgileri güncellenemedi:', error);
+    }
   };
 
   return (
@@ -65,7 +83,7 @@ const AdminSettings = () => {
 
       {selectedUser && (
         <div className="update-info">
-          <h3>{selectedUser} için yeni bilgileri girin:</h3>
+          <h3>{selectedUser.username} için yeni bilgileri girin:</h3>
           <div className="input-group">
             <label htmlFor="username">Yeni Kullanıcı Adı:</label>
             <input

@@ -9,14 +9,17 @@ const MainDishes = () => {
     const { orders, dispatch } = useOrders(); // Global state ve dispatch işlemleri
     const categoryId = 2; // category_id'yi sabitliyoruz
 
+    
     useEffect(() => {
         const fetchDishes = async () => {
             try {
-                const response = await axios.get(
-                    `http://localhost:5000/Cafe_/GetMenuWithCode?category_id=${categoryId}`
-                );
-                console.log("API'den gelen veri:", response.data);
-                setDishes(response.data);
+                const response = await axios.get('http://localhost:5000/Cafe_/GetMenuWithCode?category_id=2', {
+                    headers: {
+                      'Content-Type': 'application/json',
+                    }
+                  })
+                    .then(response => console.log(response.data))
+                    .catch(error => console.error('Network Error:', error));
             } catch (error) {
                 console.error("Yemek verisi çekilemedi:", error);
             }

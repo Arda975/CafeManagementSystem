@@ -25,14 +25,20 @@ function ProductManagement() {
     // Ürün ekleme işlemi
     const handleAddProduct = async () => {
         try {
-            await fetch('http://localhost:5000/api/products', {
+            const response = await fetch('http://localhost:5000/api/products', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newProduct),
             });
-            alert('Ürün başarıyla eklendi!');
-            setNewProduct({ name: '', description: '', price: '', category: '' });
-            setIsAddingProduct(false);
+            if (response.ok) {
+                alert('Ürün başarıyla eklendi!');
+                setNewProduct({ name: '', description: '', price: '', category: '' });
+                setIsAddingProduct(false);
+                const updatedProducts = await response.json();
+                setProducts(updatedProducts);
+            } else {
+                throw new Error('Ürün eklenemedi.');
+            }
         } catch (error) {
             console.error('Ürün eklenemedi:', error);
         }
@@ -41,14 +47,20 @@ function ProductManagement() {
     // Ürün güncelleme işlemi
     const handleUpdateProduct = async () => {
         try {
-            await fetch(`http://localhost:5000/api/products/${editingProduct.id}`, {
+            const response = await fetch(`http://localhost:5000/api/products/${editingProduct.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(editingProduct),
             });
-            alert('Ürün başarıyla güncellendi!');
-            setEditingProduct(null);
-            setIsEditingProduct(false);
+            if (response.ok) {
+                alert('Ürün başarıyla güncellendi!');
+                setEditingProduct(null);
+                setIsEditingProduct(false);
+                const updatedProducts = await response.json();
+                setProducts(updatedProducts);
+            } else {
+                throw new Error('Ürün güncellenemedi.');
+            }
         } catch (error) {
             console.error('Ürün güncellenemedi:', error);
         }
@@ -57,9 +69,15 @@ function ProductManagement() {
     // Ürün silme işlemi
     const handleDeleteProduct = async (id) => {
         try {
-            await fetch(`http://localhost:5000/api/products/${id}`, { method: 'DELETE' });
-            alert('Ürün başarıyla silindi!');
-            setProducts(products.filter((product) => product.id !== id));
+            const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                alert('Ürün başarıyla silindi!');
+                setProducts(products.filter((product) => product.id !== id));
+            } else {
+                throw new Error('Ürün silinemedi.');
+            }
         } catch (error) {
             console.error('Ürün silinemedi:', error);
         }
@@ -75,7 +93,6 @@ function ProductManagement() {
             <div className="actions">
                 <button onClick={() => setIsAddingProduct(true)}>Ürün Ekle</button>
                 <button onClick={() => setIsEditingProduct(true)}>Ürün Bilgisi Güncelle</button>
-                <button onClick={() => setEditingProduct(null)}>Ürün Sil</button>
             </div>
 
             {isAddingProduct && (
