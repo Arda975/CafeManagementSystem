@@ -1,10 +1,14 @@
-import React from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminScreen.css';
+import { QRCodeSVG } from 'qrcode.react'; // QRCodeSVG bileşenini doğru şekilde import ettik
 
 function AdminScreen() {
-    const adminName = "Admin"; // Adminin adını burada ayarlayın veya bir state ile dinamik hale getirin
+    const adminName = "Admin";
     const navigate = useNavigate();
+    const [showQRCode, setShowQRCode] = useState(false); // QR kodunun gösterilip gösterilmeyeceğini kontrol etmek için state kullandık
+
+    const url = "http://192.168.1.101:5173/"; // QR kodu için URL
 
     return (
         <div className="admin-screen">
@@ -24,7 +28,17 @@ function AdminScreen() {
                 <button className="admin-button" onClick={() => navigate('/adminsettings')}>
                     Kullanıcı Bilgisi Güncelleme
                 </button>
+                <button className="admin-button" onClick={() => setShowQRCode(true)}>
+                    QR Code Maker
+                </button>
             </div>
+
+            {showQRCode && (
+                <div className="qr-code-container">
+                    <h3>Bu QR kodu tarayarak ilgili sayfaya gidebilirsiniz:</h3>
+                    <QRCodeSVG value={url} size={200} /> {/* QR kodunu ekrana render ediyoruz */}
+                </div>
+            )}
         </div>
     );
 }
