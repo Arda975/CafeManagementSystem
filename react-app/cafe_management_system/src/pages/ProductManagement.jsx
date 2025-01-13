@@ -1,175 +1,178 @@
 import React, { useState, useEffect } from 'react';
-import './ProductManagement.css';
+import "./ProductManagement.css";
+import axios from 'axios';
 
-function ProductManagement() {
-    const [products, setProducts] = useState([]);
-    const [newProduct, setNewProduct] = useState({ name: '', description: '', price: '', category: '' });
-    const [editingProduct, setEditingProduct] = useState(null);
-    const [isAddingProduct, setIsAddingProduct] = useState(false);
-    const [isEditingProduct, setIsEditingProduct] = useState(false);
+const ProductManagement = () => {
+    const [menu, setMenu] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [newItem, setNewItem] = useState({
+        name: '',
+        price: '',
+        description: '',
+        imageUrl: null,
+        categoryId: ''
+    });
+    const [updatedItem, setUpdatedItem] = useState({
+        name: '',
+        price: ''
+    });
+    const [selectedItemId, setSelectedItemId] = useState(null);
 
-    // Ürünleri API'den çek
     useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const response = await fetch('http://localhost:5000/api/products');
-                const data = await response.json();
-                setProducts(data);
-            } catch (error) {
-                console.error('Ürünler yüklenemedi:', error);
-            }
-        };
-        fetchProducts();
+        axios.get('http://localhost:5000/Cafe_/GetProducts')
+            .then(response => {
+                setMenu(response.data);
+            })
+            .catch(error => console.error('Menü verileri alınırken bir hata oluştu:', error));
+
+        axios.get('http://localhost:5000/Cafe_/GetCategories')
+            .then(response => {
+                setCategories(response.data);
+            })
+            .catch(error => console.error('Kategori verileri alınırken bir hata oluştu:', error));
     }, []);
 
-    // Ürün ekleme işlemi
-    const handleAddProduct = async () => {
-        try {
-            await fetch('http://localhost:5000/api/products', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newProduct),
-            });
-            alert('Ürün başarıyla eklendi!');
-            setNewProduct({ name: '', description: '', price: '', category: '' });
-            setIsAddingProduct(false);
-        } catch (error) {
-            console.error('Ürün eklenemedi:', error);
-        }
+    const handleAddItem = () => {
+        const formData = new FormData();
+        formData.append('name', newItem.name);
+        formData.append('price', newItem.price);
+        formData.append('description', newItem.description);
+        formData.append('image', newItem.imageUrl);
+        formData.append('categoryId', newItem.categoryId);
+
+        axios.post('http://localhost:5000/Cafe_/AddProduct', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        })
+            .then(response => {
+                setMenu([...menu, response.data]);
+                setNewItem({
+                    name: '',
+                    price: '',
+                    description: '',
+                    imageUrl: null,
+                    categoryId: ''
+                });
+            })
+            .catch(error => console.error('Ürün eklenirken bir hata oluştu:', error));
     };
 
-    // Ürün güncelleme işlemi
-    const handleUpdateProduct = async () => {
-        try {
-            await fetch(`http://localhost:5000/api/products/${editingProduct.id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(editingProduct),
-            });
-            alert('Ürün başarıyla güncellendi!');
-            setEditingProduct(null);
-            setIsEditingProduct(false);
-        } catch (error) {
-            console.error('Ürün güncellenemedi:', error);
-        }
+    const handleUpdateItem = () => {
+        const updatedProduct = {
+            name: updatedItem.name,
+            price: updatedItem.price
+        };
+
+        axios.put(`http://localhost:5000/Cafe_/UpdateProduct?name=${updatedProduct.name}&price=${updatedProduct.price}`)
+            .then(response => {
+                setMenu(menu.map(item => item.name === updatedItem.name ? { ...item, price: updatedItem.price } : item));
+                setUpdatedItem({
+                    name: '',
+                    price: ''
+                });
+            })
+            .catch(error => console.error('Ürün güncellenirken bir hata oluştu:', error));
     };
 
-    // Ürün silme işlemi
-    const handleDeleteProduct = async (id) => {
-        try {
-            await fetch(`http://localhost:5000/api/products/${id}`, { method: 'DELETE' });
-            alert('Ürün başarıyla silindi!');
-            setProducts(products.filter((product) => product.id !== id));
-        } catch (error) {
-            console.error('Ürün silinemedi:', error);
-        }
+    const handleDeleteItem = () => {
+        axios.delete(`http://localhost:5000/Cafe_/DeleteProduct?item_id=${selectedItemId}`)
+            .then(() => {
+                setMenu(menu.filter(item => item.id !== selectedItemId));
+                setSelectedItemId(null);
+            })
+            .catch(error => console.error('Ürün silinirken bir hata oluştu:', error));
+    };
+
+    const handleImageChange = (event) => {
+        setNewItem({
+            ...newItem,
+            imageUrl: event.target.files[0]
+        });
+    };
+
+    const handleDropdownChange = (event) => {
+        const selectedProduct = menu.find(item => item.name === event.target.value);
+        setUpdatedItem({
+            name: selectedProduct.name,
+            price: selectedProduct.price,
+            image: selectedProduct.image
+        });
     };
 
     return (
-        <div className="product-management">
-            <button className="back-button" onClick={() => window.location.href = '/adminscreen'}>
-                Geri
-            </button>
-            <h1>Ürün Yönetimi</h1>
+        <div className="container">
+            <button onClick={() => window.history.back()} className="back-button">Geri Dön</button>
+            <h1>Cafe Menu Management</h1>
 
-            <div className="actions">
-                <button onClick={() => setIsAddingProduct(true)}>Ürün Ekle</button>
-                <button onClick={() => setIsEditingProduct(true)}>Ürün Bilgisi Güncelle</button>
-                <button onClick={() => setEditingProduct(null)}>Ürün Sil</button>
+            <div>
+                <h3>Add New Item</h3>
+                <input
+                    type="text"
+                    placeholder="Product Name"
+                    value={newItem.name}
+                    onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+                />
+                <input
+                    type="number"
+                    placeholder="Product Price"
+                    value={newItem.price}
+                    onChange={(e) => setNewItem({ ...newItem, price: e.target.value })}
+                />
+                <input
+                    type="text"
+                    placeholder="Product Description"
+                    value={newItem.description}
+                    onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
+                />
+                <select
+                    value={newItem.categoryId}
+                    onChange={(e) => setNewItem({ ...newItem, categoryId: e.target.value })}
+                >
+                    <option value="">Select Category</option>
+                    {categories.map(category => (
+                        <option key={category.id} value={category.id}>{category.name}</option>
+                    ))}
+                </select>
+                <input
+                    type="file"
+                    onChange={handleImageChange}
+                />
+                <button onClick={handleAddItem}>Add Product</button>
             </div>
 
-            {isAddingProduct && (
-                <div className="product-form">
-                    <h2>Yeni Ürün Ekle</h2>
-                    <input
-                        type="text"
-                        placeholder="Ürün Adı"
-                        value={newProduct.name}
-                        onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                    />
-                    <textarea
-                        placeholder="Ürün Açıklaması"
-                        value={newProduct.description}
-                        onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                    />
-                    <input
-                        type="number"
-                        placeholder="Fiyat"
-                        value={newProduct.price}
-                        onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
-                    />
-                    <input
-                        type="text"
-                        placeholder="Kategori"
-                        value={newProduct.category}
-                        onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-                    />
-                    <button onClick={handleAddProduct}>Kaydet</button>
-                    <button onClick={() => setIsAddingProduct(false)}>İptal</button>
-                </div>
-            )}
-
-            {isEditingProduct && (
-                <div className="product-form">
-                    <h2>Ürün Güncelle</h2>
-                    <select
-                        onChange={(e) => {
-                            const product = products.find((p) => p.id === parseInt(e.target.value));
-                            setEditingProduct(product || null);
-                        }}
-                    >
-                        <option value="">Bir ürün seçin</option>
-                        {products.map((product) => (
-                            <option key={product.id} value={product.id}>
-                                {product.name}
-                            </option>
-                        ))}
-                    </select>
-                    {editingProduct && (
-                        <>
-                            <input
-                                type="text"
-                                placeholder="Ürün Adı"
-                                value={editingProduct.name}
-                                onChange={(e) => setEditingProduct({ ...editingProduct, name: e.target.value })}
-                            />
-                            <textarea
-                                placeholder="Ürün Açıklaması"
-                                value={editingProduct.description}
-                                onChange={(e) => setEditingProduct({ ...editingProduct, description: e.target.value })}
-                            />
-                            <input
-                                type="number"
-                                placeholder="Fiyat"
-                                value={editingProduct.price}
-                                onChange={(e) => setEditingProduct({ ...editingProduct, price: e.target.value })}
-                            />
-                            <input
-                                type="text"
-                                placeholder="Kategori"
-                                value={editingProduct.category}
-                                onChange={(e) => setEditingProduct({ ...editingProduct, category: e.target.value })}
-                            />
-                            <button onClick={handleUpdateProduct}>Kaydet</button>
-                        </>
-                    )}
-                    <button onClick={() => setIsEditingProduct(false)}>İptal</button>
-                </div>
-            )}
-
-            <div className="product-list">
-                <h2>Ürünler</h2>
-                <ul>
-                    {products.map((product) => (
-                        <li key={product.id}>
-                            <span>{product.name}</span>
-                            <button onClick={() => handleDeleteProduct(product.id)}>Sil</button>
-                        </li>
+            <div>
+                <h3>Update Product Price</h3>
+                <select onChange={handleDropdownChange} value={updatedItem.name}>
+                    <option value="">Select Product</option>
+                    {menu.map(item => (
+                        <option key={item.name} value={item.name}>{item.name}</option>
                     ))}
-                </ul>
+                </select>
+                {updatedItem.image && (
+                    <img src={updatedItem.image} alt={updatedItem.name} width={50} height={50} />
+                )}
+                <input
+                    type="number"
+                    placeholder="Product Price"
+                    value={updatedItem.price}
+                    onChange={(e) => setUpdatedItem({ ...updatedItem, price: e.target.value })}
+                />
+                <button onClick={handleUpdateItem}>Update Price</button>
+            </div>
+
+            <div>
+                <h3>Delete Product</h3>
+                <select onChange={(e) => setSelectedItemId(parseInt(e.target.value))}>
+                    <option value="">Select Product to Delete</option>
+                    {menu.map(item => (
+                        <option key={item.id} value={item.id}>{item.name}</option>
+                    ))}
+                </select>
+                <button onClick={handleDeleteItem}>Delete Product</button>
             </div>
         </div>
     );
-}
+};
 
 export default ProductManagement;

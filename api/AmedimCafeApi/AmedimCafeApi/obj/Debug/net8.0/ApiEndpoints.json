@@ -1,6 +1,126 @@
 [
   {
     "ContainingType": "AmedimCafeAPI_Controllers.Cafe_Controller",
+    "Method": "AddProduct",
+    "RelativePath": "Cafe_/AddProduct",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Description",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Price",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "CategoryId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Image",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AmedimCafeAPI_Controllers.Cafe_Controller",
+    "Method": "AddUser",
+    "RelativePath": "Cafe_/AddUser",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "user",
+        "Type": "AmedimCafeApi.Models.Users",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AmedimCafeAPI_Controllers.Cafe_Controller",
+    "Method": "AdminControl",
+    "RelativePath": "Cafe_/AdminControl",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "password",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AmedimCafeAPI_Controllers.Cafe_Controller",
+    "Method": "DeleteProduct",
+    "RelativePath": "Cafe_/DeleteProduct",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "item_id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AmedimCafeAPI_Controllers.Cafe_Controller",
+    "Method": "DeleteUser",
+    "RelativePath": "Cafe_/DeleteUser",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "user_id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AmedimCafeAPI_Controllers.Cafe_Controller",
+    "Method": "GetCategories",
+    "RelativePath": "Cafe_/GetCategories",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AmedimCafeAPI_Controllers.Cafe_Controller",
     "Method": "GetDishes",
     "RelativePath": "Cafe_/GetMenuWithCode",
     "HttpMethod": "GET",
@@ -17,6 +137,52 @@
   },
   {
     "ContainingType": "AmedimCafeAPI_Controllers.Cafe_Controller",
+    "Method": "GetProducts",
+    "RelativePath": "Cafe_/GetProducts",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AmedimCafeAPI_Controllers.Cafe_Controller",
+    "Method": "GetTableDetail",
+    "RelativePath": "Cafe_/GetTableDetail",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "table_id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AmedimCafeAPI_Controllers.Cafe_Controller",
+    "Method": "GetTables",
+    "RelativePath": "Cafe_/GetTables",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AmedimCafeAPI_Controllers.Cafe_Controller",
+    "Method": "GetUsers",
+    "RelativePath": "Cafe_/GetUsers",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AmedimCafeAPI_Controllers.Cafe_Controller",
     "Method": "InsertOrder",
     "RelativePath": "Cafe_/InsertOrder",
     "HttpMethod": "POST",
@@ -26,6 +192,64 @@
       {
         "Name": "request",
         "Type": "AmedimCafeApi.Models.OrderRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AmedimCafeAPI_Controllers.Cafe_Controller",
+    "Method": "Payment",
+    "RelativePath": "Cafe_/Payment",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "table_id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AmedimCafeAPI_Controllers.Cafe_Controller",
+    "Method": "UpdateProduct",
+    "RelativePath": "Cafe_/UpdateProduct",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "price",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AmedimCafeAPI_Controllers.Cafe_Controller",
+    "Method": "UpdateUser",
+    "RelativePath": "Cafe_/UpdateUser",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "user_id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "user",
+        "Type": "AmedimCafeApi.Models.Users",
         "IsRequired": true
       }
     ],

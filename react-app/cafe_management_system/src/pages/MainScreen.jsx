@@ -32,14 +32,22 @@ function MainScreen() {
     };
 
     // Admin giriş yapıldığında yönlendirme
-    const handleAdminLogin = () => {
+    const handleAdminLogin = async () => {
         var username = document.getElementById("username").value;
         var password = document.getElementById("password").value;
 
-        if (username !== "admin" || password !== "admin") {
-            alert("Yanlış kullanıcı adı veya şifre");
-        } else {
-            navigate('/adminscreen');  // Admin ekranına yönlendirme
+        try {
+            const response = await fetch(`http://localhost:5000/Cafe_/AdminControl?name=${username}&password=${password}`);
+            const result = await response.text();
+
+            if (response.ok && result === "Kullanıcı doğrulandı.") {
+                navigate('/adminscreen');  // Admin ekranına yönlendirme
+            } else {
+                alert("Yanlış kullanıcı adı veya şifre");
+            }
+        } catch (error) {
+            console.error("Hata oluştu:", error);  // Hata mesajını konsola yazdır
+            alert("Bir hata oluştu: " + error.message);
         }
     };
 
