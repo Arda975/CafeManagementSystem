@@ -15,12 +15,12 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Cafe API", Version = "v1" });
 });
 
-// CORS Desteði Ekleniyor
+// CORS DesteÄŸi Ekleniyor
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.AllowAnyOrigin()
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -44,7 +44,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// CORS Politikasýný Kullan
+// CORS PolitikasÄ±nÄ± Kullan
 app.UseCors("AllowAllOrigins");
 
 app.UseAuthorization();
