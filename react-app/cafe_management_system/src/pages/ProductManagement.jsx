@@ -37,7 +37,14 @@ const ProductManagement = () => {
         formData.append('name', newItem.name);
         formData.append('price', newItem.price);
         formData.append('description', newItem.description);
-        formData.append('image', newItem.imageUrl);
+
+        // Eğer resim seçilmemişse varsayılan resmi ekleyin
+        if (newItem.imageUrl) {
+            formData.append('image', newItem.imageUrl);
+        } else {
+            formData.append('image', new File([], 'default-image.png', { type: 'image/png' })); // Varsayılan resim
+        }
+
         formData.append('categoryId', newItem.categoryId);
 
         axios.post('http://localhost:5000/Cafe_/AddProduct', formData, {
