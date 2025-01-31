@@ -8,7 +8,7 @@ function AdminScreen() {
     const navigate = useNavigate();
     const [showQRCode, setShowQRCode] = useState(false); // QR kodunun gösterilip gösterilmeyeceğini kontrol etmek için state kullandık
 
-    const url = "http://192.168.1.101:5173/"; // QR kodu için URL
+    const url = "http://..../"; // QR kodu için URL
 
     return (
         <div className="admin-screen">
