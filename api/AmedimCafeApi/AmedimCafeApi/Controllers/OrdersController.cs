@@ -1,7 +1,9 @@
+using AmedimCafeApi.Common;
 using AmedimCafeApi.Dtos;
 using AmedimCafeApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace AmedimCafeApi.Controllers;
 
@@ -15,6 +17,7 @@ public class OrdersController(IOrderService orderService) : ControllerBase
     /// </summary>
     [HttpPost]
     [AllowAnonymous]
+    [EnableRateLimiting(RateLimitPolicies.PublicOrders)]
     [ProducesResponseType<OrderDto>(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Create(CreateOrderRequest request, CancellationToken ct)
