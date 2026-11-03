@@ -1,6 +1,21 @@
-@AmedimCafeApi_HostAddress = http://localhost:5000
+@host = http://localhost:5000
 
-GET {{AmedimCafeApi_HostAddress}}/DishesController/
-Accept: application/json
+### Public menu
+GET {{host}}/api/products?categoryId=2
 
-###
+### Login (copy the token from the response)
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{ "username": "admin", "password": "<your SeedAdmin:Password>" }
+
+### Tables (Admin or Waiter)
+@token = paste-token-here
+GET {{host}}/api/tables
+Authorization: Bearer {{token}}
+
+### Customer order (public)
+POST {{host}}/api/orders
+Content-Type: application/json
+
+{ "tableId": 3, "items": [ { "productId": 1, "quantity": 2 }, { "productId": 8, "quantity": 1 } ] }
