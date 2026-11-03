@@ -1,232 +1,176 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import api, { getErrorMessage } from "../api/client";
 import "./AdminSettings.css";
+
+const ROLES = [
+  { value: "Waiter", label: "Garson" },
+  { value: "Admin", label: "Admin" },
+];
 
 const AdminSettings = () => {
   const navigate = useNavigate();
-  const [selectedUser, setSelectedUser] = useState(null);
   const [users, setUsers] = useState([]);
 
-  // Düzenleme için yeni değerler
-  const [newUsername, setNewUsername] = useState("");
+  // Düzenleme
+  const [editUser, setEditUser] = useState(null);
   const [newPassword, setNewPassword] = useState("");
 
-  // Ekleme için alanlar
+  // Ekleme
   const [addUsername, setAddUsername] = useState("");
   const [addPassword, setAddPassword] = useState("");
+  const [addRole, setAddRole] = useState("Waiter");
+
+  // Silme
+  const [deleteId, setDeleteId] = useState("");
+
+  const loadUsers = () =>
+    api.get("/users")
+      .then((response) => setUsers(response.data))
+      .catch((err) => alert(getErrorMessage(err, "Kullanıcılar yüklenemedi.")));
 
   useEffect(() => {
-    // Kullanıcıları API'den çek
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/Cafe_/GetUsers");
-        const data = await response.json();
-        setUsers(data);
-      } catch (error) {
-        console.error("Kullanıcılar yüklenemedi:", error);
-      }
-    };
-    fetchUsers();
+    loadUsers();
   }, []);
 
-  const handleUserChangeForEdit = (e) => {
-    const userId = e.target.value;
-    const user = users.find((user) => user.userid === parseInt(userId));
-    setSelectedUser(user || null);
-    if (user) {
-      setNewUsername(user.username);
-      setNewPassword(user.password);
-    } else {
-      setNewUsername("");
-      setNewPassword("");
-    }
+  const handleSelectForEdit = (e) => {
+    const user = users.find((u) => u.id === Number(e.target.value));
+    setEditUser(user ? { ...user } : null);
+    setNewPassword(""); // passwords are never sent to the client, only a new one can be set
   };
 
-  const handleUserChangeForDelete = (e) => {
-    const userId = e.target.value;
-    const user = users.find((user) => user.userid === parseInt(userId));
-    setSelectedUser(user || null);
-  };
-
-  // Kullanıcı güncelle
   const handleUpdate = async () => {
-    if (!selectedUser) {
+    if (!editUser) {
       alert("Lütfen bir kullanıcı seçin!");
       return;
     }
-
     try {
-      // Güncellenmiş veriyi oluştur
-      const updatedData = {};
-      if (newUsername) updatedData.username = newUsername;
-      if (newPassword) updatedData.password = newPassword;
-
-      // API'yi çağır
-      const response = await fetch(`http://localhost:5000/Cafe_/UpdateUser?user_id=${selectedUser.userid}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedData),
+      await api.put(`/users/${editUser.id}`, {
+        username: editUser.username,
+        role: editUser.role,
+        password: newPassword || null, // empty = keep the current password
       });
-
-      if (response.ok) {
-        alert("Kullanıcı başarıyla güncellendi!");
-        setNewUsername("");
-        setNewPassword("");
-        setSelectedUser(null);
-
-        // Güncellenmiş kullanıcı listesi
-        const updatedUsers = await fetch("http://localhost:5000/Cafe_/GetUsers");
-        const data = await updatedUsers.json();
-        setUsers(data);
-      } else {
-        const error = await response.json();
-        alert(error.message || "Güncelleme sırasında bir hata oluştu.");
-      }
-    } catch (error) {
-      console.error("Kullanıcı bilgileri güncellenemedi:", error);
-      alert("Kullanıcı bilgileri güncellenemedi.");
+      alert("Kullanıcı başarıyla güncellendi!");
+      setEditUser(null);
+      setNewPassword("");
+      loadUsers();
+    } catch (err) {
+      alert(getErrorMessage(err, "Güncelleme sırasında bir hata oluştu."));
     }
   };
 
-  // Kullanıcı ekle
   const handleAddUser = async () => {
     if (!addUsername || !addPassword) {
       alert("Lütfen gerekli tüm alanları doldurun!");
       return;
     }
     try {
-      const newUser = { username: addUsername, password: addPassword };
-
-      const response = await fetch("http://localhost:5000/Cafe_/AddUser", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newUser),
-      });
-
-      if (response.ok) {
-        alert("Kullanıcı başarıyla eklendi!");
-        setAddUsername("");
-        setAddPassword("");
-        const updatedUsers = await fetch("http://localhost:5000/Cafe_/GetUsers");
-        const data = await updatedUsers.json();
-        setUsers(data);
-      } else {
-        throw new Error("Kullanıcı ekleme sırasında bir hata oluştu.");
-      }
-    } catch (error) {
-      console.error("Kullanıcı eklenemedi:", error);
+      await api.post("/users", { username: addUsername, password: addPassword, role: addRole });
+      alert("Kullanıcı başarıyla eklendi!");
+      setAddUsername("");
+      setAddPassword("");
+      setAddRole("Waiter");
+      loadUsers();
+    } catch (err) {
+      alert(getErrorMessage(err, "Kullanıcı eklenemedi."));
     }
   };
 
-  // Kullanıcı sil
   const handleDeleteUser = async () => {
-    if (!selectedUser) {
+    if (!deleteId) {
       alert("Lütfen bir kullanıcı seçin!");
       return;
     }
     try {
-      const response = await fetch(`http://localhost:5000/Cafe_/DeleteUser?user_id=${selectedUser.userid}`, {
-        method: "DELETE",
-      });
-
-      if (response.ok) {
-        alert("Kullanıcı başarıyla silindi!");
-        setSelectedUser(null);
-        const updatedUsers = await fetch("http://localhost:5000/Cafe_/GetUsers");
-        const data = await updatedUsers.json();
-        setUsers(data);
-      } else {
-        throw new Error("Kullanıcı silme sırasında bir hata oluştu.");
-      }
-    } catch (error) {
-      console.error("Kullanıcı silinemedi:", error);
+      await api.delete(`/users/${deleteId}`);
+      alert("Kullanıcı başarıyla silindi!");
+      setDeleteId("");
+      loadUsers();
+    } catch (err) {
+      alert(getErrorMessage(err, "Kullanıcı silinemedi."));
     }
   };
 
-  return (
-      <div className="admin-settings">
-        <button className="back-button" onClick={() => navigate("/adminscreen")}>
-          ← Geri
-        </button>
-        <h2>Admin Ayarları</h2>
+  const userOptions = users.map((user) => (
+    <option key={user.id} value={user.id}>
+      {user.username} ({user.role === "Admin" ? "Admin" : "Garson"})
+    </option>
+  ));
 
-        {/* Kullanıcı Düzenleme */}
-        <div className="section">
-          <h3>Kullanıcı Düzenleme</h3>
-          <div className="user-select">
-            <label htmlFor="user-select">Kullanıcı Seçin:</label>
-            <select id="user-select" onChange={handleUserChangeForEdit}>
-              <option value="">Seçiniz...</option>
-              {users.map((user) => (
-                  <option key={user.userid} value={user.userid}>
-                    {user.username}
-                  </option>
-              ))}
-            </select>
-          </div>
+  return (
+    <div className="admin-settings">
+      <button className="back-button" onClick={() => navigate("/adminscreen")}>
+        ← Geri
+      </button>
+      <h2>Kullanıcı Yönetimi</h2>
+
+      {/* Kullanıcı Düzenleme */}
+      <div className="section">
+        <h3>Kullanıcı Düzenleme</h3>
+        <div className="user-select">
+          <label htmlFor="user-select">Kullanıcı Seçin:</label>
+          <select id="user-select" value={editUser?.id ?? ""} onChange={handleSelectForEdit}>
+            <option value="">Seçiniz...</option>
+            {userOptions}
+          </select>
+        </div>
+        {editUser && (
           <div className="update-info">
-            <h4>Kullanıcı Adı ve Şifreyi Girin:</h4>
             <div className="input-group">
-              <label>Yeni Kullanıcı Adı:</label>
-              <input
-                  type="text"
-                  value={newUsername}
-                  onChange={(e) => setNewUsername(e.target.value)}
-              />
+              <label>Kullanıcı Adı:</label>
+              <input type="text" value={editUser.username}
+                     onChange={(e) => setEditUser({ ...editUser, username: e.target.value })} />
             </div>
             <div className="input-group">
-              <label>Yeni Şifre:</label>
-              <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-              />
+              <label>Yeni Şifre (boş bırakılırsa değişmez):</label>
+              <input type="password" value={newPassword} autoComplete="new-password"
+                     onChange={(e) => setNewPassword(e.target.value)} />
+            </div>
+            <div className="input-group">
+              <label>Rol:</label>
+              <select value={editUser.role} onChange={(e) => setEditUser({ ...editUser, role: e.target.value })}>
+                {ROLES.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
+              </select>
             </div>
             <button onClick={handleUpdate}>Güncelle</button>
           </div>
-        </div>
-
-        {/* Kullanıcı Ekleme */}
-        <div className="section">
-          <h3>Kullanıcı Ekleme</h3>
-          <div className="input-group">
-            <label>Kullanıcı Adı:</label>
-            <input
-                type="text"
-                value={addUsername}
-                onChange={(e) => setAddUsername(e.target.value)}
-            />
-          </div>
-          <div className="input-group">
-            <label>Şifre:</label>
-            <input
-                type="password"
-                value={addPassword}
-                onChange={(e) => setAddPassword(e.target.value)}
-            />
-          </div>
-          <button onClick={handleAddUser}>Ekle</button>
-        </div>
-
-        {/* Kullanıcı Silme */}
-        <div className="section">
-          <h3>Kullanıcı Silme</h3>
-          <div className="user-select">
-            <label htmlFor="delete-user-select">Kullanıcı Seçin:</label>
-            <select id="delete-user-select" onChange={handleUserChangeForDelete}>
-              <option value="">Seçiniz...</option>
-              {users.map((user) => (
-                  <option key={user.userid} value={user.userid}>
-                    {user.username}
-                  </option>
-              ))}
-            </select>
-          </div>
-          <button onClick={handleDeleteUser}>Sil</button>
-        </div>
+        )}
       </div>
+
+      {/* Kullanıcı Ekleme */}
+      <div className="section">
+        <h3>Kullanıcı Ekleme</h3>
+        <div className="input-group">
+          <label>Kullanıcı Adı:</label>
+          <input type="text" value={addUsername} onChange={(e) => setAddUsername(e.target.value)} />
+        </div>
+        <div className="input-group">
+          <label>Şifre (en az 6 karakter):</label>
+          <input type="password" value={addPassword} autoComplete="new-password"
+                 onChange={(e) => setAddPassword(e.target.value)} />
+        </div>
+        <div className="input-group">
+          <label>Rol:</label>
+          <select value={addRole} onChange={(e) => setAddRole(e.target.value)}>
+            {ROLES.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
+          </select>
+        </div>
+        <button onClick={handleAddUser}>Ekle</button>
+      </div>
+
+      {/* Kullanıcı Silme */}
+      <div className="section">
+        <h3>Kullanıcı Silme</h3>
+        <div className="user-select">
+          <label htmlFor="delete-user-select">Kullanıcı Seçin:</label>
+          <select id="delete-user-select" value={deleteId} onChange={(e) => setDeleteId(e.target.value)}>
+            <option value="">Seçiniz...</option>
+            {userOptions}
+          </select>
+        </div>
+        <button onClick={handleDeleteUser}>Sil</button>
+      </div>
+    </div>
   );
 };
 
