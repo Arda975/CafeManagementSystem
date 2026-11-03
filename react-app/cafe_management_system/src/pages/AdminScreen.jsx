@@ -1,21 +1,28 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { QRCodeSVG } from 'qrcode.react';
+import { clearSession, getSession } from '../auth/session';
 import './AdminScreen.css';
-import { QRCodeSVG } from 'qrcode.react'; // QRCodeSVG bileşenini doğru şekilde import ettik
 
 function AdminScreen() {
-    const adminName = "Admin";
     const navigate = useNavigate();
-    const [showQRCode, setShowQRCode] = useState(false); // QR kodunun gösterilip gösterilmeyeceğini kontrol etmek için state kullandık
+    const session = getSession();
+    const [showQRCode, setShowQRCode] = useState(false);
 
-    const url = "http://..../"; // QR kodu için URL
+    // Customers scan this code at the table and land on the menu.
+    const menuUrl = `${window.location.origin}/main-dishes`;
+
+    const logout = () => {
+        clearSession();
+        navigate('/');
+    };
 
     return (
         <div className="admin-screen">
-            <button className="back-button" onClick={() => navigate('/')}>
-                Anasayfaya dön
+            <button className="back-button" onClick={logout}>
+                Çıkış Yap
             </button>
-            <h1>Hoşgeldiniz, {adminName}!</h1>
+            <h1>Hoşgeldiniz, {session?.username}!</h1>
             <p>Yönetim paneline hoş geldiniz.</p>
 
             <div className="button-container">
@@ -23,10 +30,10 @@ function AdminScreen() {
                     Masaları Getir
                 </button>
                 <button className="admin-button" onClick={() => navigate('/productmanagement')}>
-                    Ürün Güncelleme
+                    Ürün Yönetimi
                 </button>
                 <button className="admin-button" onClick={() => navigate('/adminsettings')}>
-                    Kullanıcı Bilgisi Güncelleme
+                    Kullanıcı Yönetimi
                 </button>
                 <button className="admin-button" onClick={() => setShowQRCode(true)}>
                     QR Code Maker
@@ -35,8 +42,9 @@ function AdminScreen() {
 
             {showQRCode && (
                 <div className="qr-code-container">
-                    <h3>Bu QR kodu tarayarak ilgili sayfaya gidebilirsiniz:</h3>
-                    <QRCodeSVG value={url} size={200} /> {/* QR kodunu ekrana render ediyoruz */}
+                    <h3>Bu QR kodu tarayarak menüye gidebilirsiniz:</h3>
+                    <QRCodeSVG value={menuUrl} size={200} />
+                    <p>{menuUrl}</p>
                 </div>
             )}
         </div>

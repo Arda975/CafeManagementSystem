@@ -1,21 +1,18 @@
 import React, { useState } from "react";
-import { useOrders } from "./OrderContext"; // Global sipariş yönetimini içeri alıyoruz
+import { useOrders } from "./OrderContext";
+import api, { getErrorMessage } from "../api/client";
 import "./OrderPopup.css";
-import axios from "axios"; // Axios'u içeri alıyoruz
 
 const OrderSummaryPopup = () => {
-    const { orders, dispatch } = useOrders(); // Global state'den orders alıyoruz ve dispatch fonksiyonunu alıyoruz
-    const [isOpen, setIsOpen] = useState(false); // Pop-up'ın açık olup olmadığını kontrol eden state
-    const [tableId, setTableId] = useState(""); // Masa numarasını tutan state
-    const [error, setError] = useState(""); // Hata mesajını tutan state
+    const { orders, dispatch } = useOrders();
+    const [isOpen, setIsOpen] = useState(false);
+    const [tableId, setTableId] = useState("");
+    const [error, setError] = useState("");
+    const [sending, setSending] = useState(false);
 
-    const togglePopup = () => {
-        setIsOpen(!isOpen); // Pop-up'ı açıp kapatmak için state değiştiriyoruz
-    };
-
-    const handleTableIdChange = (e) => {
-        setTableId(e.target.value); // Masa numarası değişimini yönetiyoruz
-    };
+    const items = Object.values(orders);
+    // Shown to the customer only; the API calculates the real total from database prices.
+    const totalAmount = items.reduce((total, item) => total + item.price * item.quantity, 0);
 
     const sendOrder = async () => {
         if (!tableId) {
@@ -23,48 +20,28 @@ const OrderSummaryPopup = () => {
             return;
         }
 
+        setSending(true);
         try {
-            const orderContent = Object.keys(orders).map(item => `${item} ${orders[item].quantity} adet`).join(", ");
-            const totalAmount = Object.keys(orders).reduce((total, item) => total + (orders[item].price * orders[item].quantity), 0);
-
-            const response = await axios.post("http://localhost:5000/Cafe_/InsertOrder", {
-                TableId: parseInt(tableId, 10),
-                OrderContent: orderContent,
-                TotalAmount: totalAmount
+            const response = await api.post("/orders", {
+                tableId: parseInt(tableId, 10),
+                items: items.map((item) => ({ productId: item.productId, quantity: item.quantity })),
             });
 
-            if (response.status === 200) {
-                alert("Sipariş başarıyla gönderildi!");
-                setError(""); // Hata mesajını temizliyoruz
-
-                // Sipariş başarıyla gönderildikten sonra listeyi temizliyoruz
-                dispatch({ type: "CLEAR_ORDERS" });
-            }
-        } catch (error) {
-            console.error("Sipariş gönderme hatası:", error);
-            alert("Sipariş gönderilirken bir hata oluştu.");
+            alert(`Sipariş alındı! Toplam: ${response.data.totalAmount} TL`);
+            setError("");
+            dispatch({ type: "CLEAR_ORDERS" });
+            setIsOpen(false);
+        } catch (err) {
+            setError(getErrorMessage(err, "Sipariş gönderilirken bir hata oluştu."));
+        } finally {
+            setSending(false);
         }
     };
 
-    // Order listesi render edilmesi
-    const orderItems = Object.keys(orders).map((item) => {
-        const order = orders[item];
-        return (
-            <div className="order-item" key={item}>
-                <p>{item} {order.quantity} adet Toplam: {order.price * order.quantity} TL</p>
-            </div>
-        );
-    });
-
-    const totalAmount = Object.keys(orders).reduce((total, item) => {
-        const order = orders[item];
-        return total + (order.price * order.quantity);
-    }, 0);
-
     return (
         <div>
-            {Object.keys(orders).length > 0 && (
-                <button className="order-button" onClick={togglePopup}>
+            {items.length > 0 && (
+                <button className="order-button" onClick={() => setIsOpen(!isOpen)}>
                     Siparişimi Göster
                 </button>
             )}
@@ -77,24 +54,29 @@ const OrderSummaryPopup = () => {
                         <input
                             type="number"
                             id="tableId"
+                            min="1"
                             value={tableId}
-                            onChange={handleTableIdChange}
+                            onChange={(e) => setTableId(e.target.value)}
                             className="table-id-input"
                         />
                     </div>
                     {error && <p className="error-message">{error}</p>}
-                    {orderItems.length > 0 ? (
-                        <div>{orderItems}</div>
+                    {items.length > 0 ? (
+                        <div>
+                            {items.map((item) => (
+                                <div className="order-item" key={item.productId}>
+                                    <p>{item.name} {item.quantity} adet Toplam: {item.price * item.quantity} TL</p>
+                                </div>
+                            ))}
+                        </div>
                     ) : (
                         <p>Henüz siparişiniz yok.</p>
                     )}
-                    <div>
-                        Toplam: {totalAmount} TL
-                    </div>
-                    <button className="send-button" onClick={sendOrder}>
-                        Siparişi Gönder
+                    <div>Toplam: {totalAmount} TL</div>
+                    <button className="send-button" onClick={sendOrder} disabled={sending || items.length === 0}>
+                        {sending ? "Gönderiliyor..." : "Siparişi Gönder"}
                     </button>
-                    <button className="close-button" onClick={togglePopup}>
+                    <button className="close-button" onClick={() => setIsOpen(false)}>
                         Kapat
                     </button>
                 </div>

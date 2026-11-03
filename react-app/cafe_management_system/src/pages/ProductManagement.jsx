@@ -1,182 +1,144 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api, { getErrorMessage, resolveImage } from '../api/client';
 import "./ProductManagement.css";
-import axios from 'axios';
+
+const emptyNewItem = { name: '', price: '', stockQuantity: '', description: '', image: null, categoryId: '' };
 
 const ProductManagement = () => {
+    const navigate = useNavigate();
     const [menu, setMenu] = useState([]);
     const [categories, setCategories] = useState([]);
-    const [newItem, setNewItem] = useState({
-        name: '',
-        price: '',
-        description: '',
-        imageUrl: null,
-        categoryId: ''
-    });
-    const [updatedItem, setUpdatedItem] = useState({
-        name: '',
-        price: ''
-    });
-    const [selectedItemId, setSelectedItemId] = useState(null);
+    const [newItem, setNewItem] = useState(emptyNewItem);
+    const [fileInputKey, setFileInputKey] = useState(0);
+    const [editItem, setEditItem] = useState(null); // full product being edited
+    const [deleteId, setDeleteId] = useState('');
+    const [message, setMessage] = useState('');
+
+    const loadProducts = () =>
+        api.get('/products')
+            .then((response) => setMenu(response.data))
+            .catch((err) => setMessage(getErrorMessage(err, 'Ürünler alınamadı.')));
 
     useEffect(() => {
-        axios.get('http://localhost:5000/Cafe_/GetProducts')
-            .then(response => {
-                setMenu(response.data);
-            })
-            .catch(error => console.error('Menü verileri alınırken bir hata oluştu:', error));
-
-        axios.get('http://localhost:5000/Cafe_/GetCategories')
-            .then(response => {
-                setCategories(response.data);
-            })
-            .catch(error => console.error('Kategori verileri alınırken bir hata oluştu:', error));
+        loadProducts();
+        api.get('/categories')
+            .then((response) => setCategories(response.data))
+            .catch((err) => setMessage(getErrorMessage(err, 'Kategoriler alınamadı.')));
     }, []);
 
-    const handleAddItem = () => {
+    const handleAddItem = async () => {
+        // multipart/form-data because the request can include an image file
         const formData = new FormData();
         formData.append('name', newItem.name);
-        formData.append('price', newItem.price);
+        formData.append('price', newItem.price || '0');
+        formData.append('stockQuantity', newItem.stockQuantity || '0');
         formData.append('description', newItem.description);
+        formData.append('categoryId', newItem.categoryId || '0');
+        if (newItem.image) formData.append('image', newItem.image);
 
-        // Eğer resim seçilmemişse varsayılan resmi ekleyin
-        if (newItem.imageUrl) {
-            formData.append('image', newItem.imageUrl);
-        } else {
-            formData.append('image', new File([], 'default-image.png', { type: 'image/png' })); // Varsayılan resim
+        try {
+            const response = await api.post('/products', formData);
+            setMenu([...menu, response.data]);
+            setNewItem(emptyNewItem);
+            setFileInputKey((k) => k + 1); // reset the file input
+            setMessage(`"${response.data.name}" eklendi.`);
+        } catch (err) {
+            setMessage(getErrorMessage(err, 'Ürün eklenirken bir hata oluştu.'));
         }
-
-        formData.append('categoryId', newItem.categoryId);
-
-        axios.post('http://localhost:5000/Cafe_/AddProduct', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            }
-        })
-            .then(response => {
-                setMenu([...menu, response.data]);
-                setNewItem({
-                    name: '',
-                    price: '',
-                    description: '',
-                    imageUrl: null,
-                    categoryId: ''
-                });
-            })
-            .catch(error => console.error('Ürün eklenirken bir hata oluştu:', error));
     };
 
-    const handleUpdateItem = () => {
-        const updatedProduct = {
-            name: updatedItem.name,
-            price: updatedItem.price
-        };
-
-        axios.put(`http://localhost:5000/Cafe_/UpdateProduct?name=${updatedProduct.name}&price=${updatedProduct.price}`)
-            .then(response => {
-                setMenu(menu.map(item => item.name === updatedItem.name ? { ...item, price: updatedItem.price } : item));
-                setUpdatedItem({
-                    name: '',
-                    price: ''
-                });
-            })
-            .catch(error => console.error('Ürün güncellenirken bir hata oluştu:', error));
+    const handleSelectForEdit = (event) => {
+        const product = menu.find((item) => item.id === Number(event.target.value));
+        setEditItem(product ? { ...product } : null);
     };
 
-    const handleDeleteItem = () => {
-        axios.delete(`http://localhost:5000/Cafe_/DeleteProduct?item_id=${selectedItemId}`)
-            .then(() => {
-                setMenu(menu.filter(item => item.id !== selectedItemId));
-                setSelectedItemId(null);
-            })
-            .catch(error => console.error('Ürün silinirken bir hata oluştu:', error));
+    const handleUpdateItem = async () => {
+        if (!editItem) return;
+        try {
+            const response = await api.put(`/products/${editItem.id}`, {
+                name: editItem.name,
+                description: editItem.description,
+                price: Number(editItem.price),
+                stockQuantity: Number(editItem.stockQuantity),
+                categoryId: editItem.categoryId,
+            });
+            setMenu(menu.map((item) => (item.id === response.data.id ? response.data : item)));
+            setEditItem(null);
+            setMessage(`"${response.data.name}" güncellendi.`);
+        } catch (err) {
+            setMessage(getErrorMessage(err, 'Ürün güncellenirken bir hata oluştu.'));
+        }
     };
 
-    const handleImageChange = (event) => {
-        setNewItem({
-            ...newItem,
-            imageUrl: event.target.files[0]
-        });
-    };
-
-    const handleDropdownChange = (event) => {
-        const selectedProduct = menu.find(item => item.name === event.target.value);
-        setUpdatedItem({
-            name: selectedProduct.name,
-            price: selectedProduct.price,
-            image: selectedProduct.image
-        });
+    const handleDeleteItem = async () => {
+        if (!deleteId) return;
+        try {
+            await api.delete(`/products/${deleteId}`);
+            setMenu(menu.filter((item) => item.id !== Number(deleteId)));
+            setDeleteId('');
+            setMessage('Ürün menüden kaldırıldı.');
+        } catch (err) {
+            setMessage(getErrorMessage(err, 'Ürün silinirken bir hata oluştu.'));
+        }
     };
 
     return (
         <div className="container">
-            <button onClick={() => window.history.back()} className="back-button">Geri Dön</button>
-            <h1>Cafe Menu Management</h1>
+            <button onClick={() => navigate('/adminscreen')} className="back-button">Geri Dön</button>
+            <h1>Menü Yönetimi</h1>
+            {message && <p>{message}</p>}
 
             <div>
-                <h3>Add New Item</h3>
-                <input
-                    type="text"
-                    placeholder="Product Name"
-                    value={newItem.name}
-                    onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-                />
-                <input
-                    type="number"
-                    placeholder="Product Price"
-                    value={newItem.price}
-                    onChange={(e) => setNewItem({ ...newItem, price: e.target.value })}
-                />
-                <input
-                    type="text"
-                    placeholder="Product Description"
-                    value={newItem.description}
-                    onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
-                />
-                <select
-                    value={newItem.categoryId}
-                    onChange={(e) => setNewItem({ ...newItem, categoryId: e.target.value })}
-                >
-                    <option value="">Select Category</option>
-                    {categories.map(category => (
+                <h3>Yeni Ürün Ekle</h3>
+                <input type="text" placeholder="Ürün Adı" value={newItem.name}
+                       onChange={(e) => setNewItem({ ...newItem, name: e.target.value })} />
+                <input type="number" placeholder="Fiyat" min="0" step="0.01" value={newItem.price}
+                       onChange={(e) => setNewItem({ ...newItem, price: e.target.value })} />
+                <input type="number" placeholder="Stok" min="0" value={newItem.stockQuantity}
+                       onChange={(e) => setNewItem({ ...newItem, stockQuantity: e.target.value })} />
+                <input type="text" placeholder="Açıklama" value={newItem.description}
+                       onChange={(e) => setNewItem({ ...newItem, description: e.target.value })} />
+                <select value={newItem.categoryId} onChange={(e) => setNewItem({ ...newItem, categoryId: e.target.value })}>
+                    <option value="">Kategori Seçin</option>
+                    {categories.map((category) => (
                         <option key={category.id} value={category.id}>{category.name}</option>
                     ))}
                 </select>
-                <input
-                    type="file"
-                    onChange={handleImageChange}
-                />
-                <button onClick={handleAddItem}>Add Product</button>
+                <input key={fileInputKey} type="file" accept=".jpg,.jpeg,.png,.webp"
+                       onChange={(e) => setNewItem({ ...newItem, image: e.target.files[0] || null })} />
+                <button onClick={handleAddItem}>Ürün Ekle</button>
             </div>
 
             <div>
-                <h3>Update Product Price</h3>
-                <select onChange={handleDropdownChange} value={updatedItem.name}>
-                    <option value="">Select Product</option>
-                    {menu.map(item => (
-                        <option key={item.name} value={item.name}>{item.name}</option>
+                <h3>Fiyat / Stok Güncelle</h3>
+                <select onChange={handleSelectForEdit} value={editItem?.id ?? ''}>
+                    <option value="">Ürün Seçin</option>
+                    {menu.map((item) => (
+                        <option key={item.id} value={item.id}>{item.name} (stok: {item.stockQuantity})</option>
                     ))}
                 </select>
-                {updatedItem.image && (
-                    <img src={updatedItem.image} alt={updatedItem.name} width={50} height={50} />
+                {editItem && (
+                    <>
+                        <img src={resolveImage(editItem.imagePath)} alt={editItem.name} width={50} height={50} />
+                        <input type="number" placeholder="Fiyat" min="0" step="0.01" value={editItem.price}
+                               onChange={(e) => setEditItem({ ...editItem, price: e.target.value })} />
+                        <input type="number" placeholder="Stok" min="0" value={editItem.stockQuantity}
+                               onChange={(e) => setEditItem({ ...editItem, stockQuantity: e.target.value })} />
+                        <button onClick={handleUpdateItem}>Güncelle</button>
+                    </>
                 )}
-                <input
-                    type="number"
-                    placeholder="Product Price"
-                    value={updatedItem.price}
-                    onChange={(e) => setUpdatedItem({ ...updatedItem, price: e.target.value })}
-                />
-                <button onClick={handleUpdateItem}>Update Price</button>
             </div>
 
             <div>
-                <h3>Delete Product</h3>
-                <select onChange={(e) => setSelectedItemId(parseInt(e.target.value))}>
-                    <option value="">Select Product to Delete</option>
-                    {menu.map(item => (
+                <h3>Ürün Sil</h3>
+                <select value={deleteId} onChange={(e) => setDeleteId(e.target.value)}>
+                    <option value="">Silinecek Ürünü Seçin</option>
+                    {menu.map((item) => (
                         <option key={item.id} value={item.id}>{item.name}</option>
                     ))}
                 </select>
-                <button onClick={handleDeleteItem}>Delete Product</button>
+                <button onClick={handleDeleteItem}>Ürünü Sil</button>
             </div>
         </div>
     );

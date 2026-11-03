@@ -1,53 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUserLock } from 'react-icons/fa';  // Admin ikonu
+import { FaUserLock } from 'react-icons/fa';  // Personel giriş ikonu
+import api, { getErrorMessage } from '../api/client';
+import { getSession, isAdmin, saveSession } from '../auth/session';
 import './MainScreen.css';
+
+const images = [
+    "/assets/cafe-image1.jpg",
+    "/assets/cafe-image2.jpg",
+    "/assets/cafe-image3.jpg",
+    "/assets/cafe-image4.jpg",
+    "/assets/cafe-image5.jpg"
+];
 
 function MainScreen() {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [isFormVisible, setIsFormVisible] = useState(false); // Formun görünürlüğünü kontrol eden state
-    const navigate = useNavigate();  // useNavigate hook'unu başlat
+    const [isFormVisible, setIsFormVisible] = useState(false);
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
 
-    // Resim listesi
-    const images = [
-        "/assets/cafe-image1.jpg",
-        "/assets/cafe-image2.jpg",
-        "/assets/cafe-image3.jpg",
-        "/assets/cafe-image4.jpg",
-        "/assets/cafe-image5.jpg"
-    ];
-
-    // Resim değişimini her saniye yapmak için useEffect kullanabiliriz
+    // Arka plan resmini her 3,5 saniyede bir değiştir
     useEffect(() => {
         const intervalId = setInterval(() => {
             setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-        }, 3500); // Her 3500ms (3,5 saniye) bir resim değişecek
-
-        return () => clearInterval(intervalId); // Komponent unmount olduğunda interval temizlenir
+        }, 3500);
+        return () => clearInterval(intervalId);
     }, []);
 
-    // Form açma ve kapama fonksiyonu
-    const toggleAdminForm = () => {
-        setIsFormVisible(!isFormVisible);
+    // Already logged in: the lock icon goes straight to the user's panel.
+    const handleLockClick = () => {
+        const session = getSession();
+        if (session) {
+            navigate(isAdmin(session) ? '/adminscreen' : '/tables');
+        } else {
+            setIsFormVisible(!isFormVisible);
+        }
     };
 
-    // Admin giriş yapıldığında yönlendirme
-    const handleAdminLogin = async () => {
-        var username = document.getElementById("username").value;
-        var password = document.getElementById("password").value;
-
+    // Staff login: the API returns a JWT that is sent with every following request.
+    const handleLogin = async (event) => {
+        event.preventDefault();
+        setError("");
         try {
-            const response = await fetch(`http://localhost:5000/Cafe_/AdminControl?name=${username}&password=${password}`);
-            const result = await response.text();
-
-            if (response.ok && result === "Kullanıcı doğrulandı.") {
-                navigate('/adminscreen');  // Admin ekranına yönlendirme
-            } else {
-                alert("Yanlış kullanıcı adı veya şifre");
-            }
-        } catch (error) {
-            console.error("Hata oluştu:", error);  // Hata mesajını konsola yazdır
-            alert("Bir hata oluştu: " + error.message);
+            const response = await api.post('/auth/login', { username, password });
+            saveSession(response.data);
+            navigate(isAdmin(response.data) ? '/adminscreen' : '/tables');
+        } catch (err) {
+            setError(getErrorMessage(err, "Giriş yapılamadı."));
         }
     };
 
@@ -62,25 +63,24 @@ function MainScreen() {
                     <Link to="/" className="nav-link">Ana Sayfa</Link>
                     <Link to="/about" className="nav-link">Hakkımızda</Link>
                     <Link to="/main-dishes" className="menu-button">Menü</Link>
-                    {/* Admin Icon */}
-                    <FaUserLock
-                        className="admin-icon"
-                        onClick={toggleAdminForm} // Tıklama ile formu aç/kapa
-                    />
+                    <FaUserLock className="admin-icon" onClick={handleLockClick} />
                 </div>
             </div>
 
-            {/* Admin Login Form */}
+            {/* Personel Giriş Formu */}
             {isFormVisible && (
-                <div className="admin-login-form">
+                <form className="admin-login-form" onSubmit={handleLogin}>
                     <h1>Amedim Cafe</h1>
-                    <h2>Admin Girişi</h2>
+                    <h2>Personel Girişi</h2>
                     <label htmlFor="username">Kullanıcı Adı</label>
-                    <input type="text" id="username" placeholder="Kullanıcı Adınızı Girin" />
+                    <input type="text" id="username" placeholder="Kullanıcı Adınızı Girin" autoComplete="username"
+                           value={username} onChange={(e) => setUsername(e.target.value)} />
                     <label htmlFor="password">Şifre</label>
-                    <input type="password" id="password" placeholder="Şifrenizi Girin" />
-                    <button onClick={handleAdminLogin}>Giriş Yap</button>
-                </div>
+                    <input type="password" id="password" placeholder="Şifrenizi Girin" autoComplete="current-password"
+                           value={password} onChange={(e) => setPassword(e.target.value)} />
+                    {error && <p className="login-error">{error}</p>}
+                    <button type="submit">Giriş Yap</button>
+                </form>
             )}
 
             {/* Hero Section - Arka Plan */}
@@ -91,8 +91,6 @@ function MainScreen() {
                     <Link to="/main-dishes" className="hero-order-button">Sipariş Ver</Link>
                 </div>
             </div>
-
-            {/* Görsel Değiştirme Noktaları Kaldırıldı */}
         </div>
     );
 }

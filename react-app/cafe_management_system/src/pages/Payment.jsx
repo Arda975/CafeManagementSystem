@@ -1,76 +1,55 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useTable } from './TableContext';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import api, { getErrorMessage } from '../api/client';
 import './Payment.css';
 
+/**
+ * Staff screen that closes a table's bill. Card details are NOT collected here:
+ * the app doesn't process card payments, so it shouldn't touch card data at all.
+ */
 function Payment() {
-    const [cardNumber, setCardNumber] = useState('');
-    const [cvv, setCvv] = useState('');
-    const [expiryDate, setExpiryDate] = useState('');
+    const { tableId } = useParams();
     const navigate = useNavigate();
-    const { tableId } = useTable();
+    const [table, setTable] = useState(null);
+    const [error, setError] = useState("");
+    const [paying, setPaying] = useState(false);
+
+    useEffect(() => {
+        api.get(`/tables/${tableId}`)
+            .then((response) => setTable(response.data))
+            .catch((err) => setError(getErrorMessage(err, "Masa bilgisi alınamadı.")));
+    }, [tableId]);
 
     const handlePayment = async () => {
+        setPaying(true);
         try {
-            const response = await fetch(`http://localhost:5000/Cafe_/Payment?table_id=${tableId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-
-            if (response.ok) {
-                alert('Ödeme tamamlandı!');
-                navigate('/tables'); // Kullanıcıyı tables sayfasına yönlendir
-            } else {
-                alert('Ödeme başarısız oldu!');
-            }
-        } catch (error) {
-            console.error('Ödeme hatası:', error);
-            alert('Ödeme sırasında bir hata oluştu.');
+            const response = await api.post(`/tables/${tableId}/payment`);
+            alert(`Ödeme alındı: ${response.data.paidAmount} TL`);
+            navigate('/tables');
+        } catch (err) {
+            alert(getErrorMessage(err, 'Ödeme sırasında bir hata oluştu.'));
+        } finally {
+            setPaying(false);
         }
-    };
-
-    const handleBack = () => {
-        navigate(-1); // Kullanıcıyı önceki sayfaya yönlendir
     };
 
     return (
         <div className="payment-container">
             <h1>Ödeme Ekranı</h1>
             <div className="payment-form">
-                <label>
-                    Kart Numarası:
-                    <input
-                        type="text"
-                        value={cardNumber}
-                        onChange={(e) => setCardNumber(e.target.value)}
-                        placeholder="Kart Numarası"
-                    />
-                </label>
-                <label>
-                    CVV:
-                    <input
-                        type="text"
-                        value={cvv}
-                        onChange={(e) => setCvv(e.target.value)}
-                        placeholder="CVV"
-                    />
-                </label>
-                <label>
-                    Son Kullanma Tarihi:
-                    <input
-                        type="text"
-                        value={expiryDate}
-                        onChange={(e) => setExpiryDate(e.target.value)}
-                        placeholder="MM/YY"
-                    />
-                </label>
+                {error && <p>{error}</p>}
+                {table && (
+                    <>
+                        <h2>{table.name}</h2>
+                        <p>Açık sipariş sayısı: {table.openOrders.length}</p>
+                        <p><strong>Ödenecek tutar: {table.openBill} TL</strong></p>
+                    </>
+                )}
                 <div className="button-group">
-                    <button className="payment-button" onClick={handlePayment}>
-                        Ödeme Yap
+                    <button className="payment-button" onClick={handlePayment} disabled={!table?.isOccupied || paying}>
+                        {paying ? 'İşleniyor...' : 'Ödemeyi Al'}
                     </button>
-                    <button className="back-button" onClick={handleBack}>
+                    <button className="back-button" onClick={() => navigate('/tables')}>
                         Geri Dön
                     </button>
                 </div>

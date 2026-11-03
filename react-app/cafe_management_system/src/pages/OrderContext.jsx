@@ -1,37 +1,35 @@
 import React, { createContext, useContext, useReducer } from "react";
 
-// Başlangıç durumu
+// Cart state, keyed by product id: { [productId]: { productId, name, price, quantity } }
 const initialState = {};
 
-// Reducer fonksiyonu
 const orderReducer = (state, action) => {
     switch (action.type) {
-        case "ADD_ITEM":
-            const { itemName, price } = action.payload;
+        case "ADD_ITEM": {
+            const { productId, name, price } = action.payload;
+            const current = state[productId];
             return {
                 ...state,
-                [itemName]: {
-                    ...state[itemName],
-                    quantity: (state[itemName]?.quantity || 0) + 1,
-                    price: price, // Fiyat bilgisini burada saklıyoruz
-                },
+                [productId]: { productId, name, price, quantity: (current?.quantity || 0) + 1 },
             };
+        }
 
-        case "REMOVE_ITEM":
-            const { itemNameToRemove } = action.payload;
-            const updatedState = { ...state };
-            if (updatedState[itemNameToRemove]) {
-                const newQuantity = updatedState[itemNameToRemove].quantity - 0.5;
-                if (newQuantity <= 0) {
-                    delete updatedState[itemNameToRemove]; // Quantity 0 ise öğe tamamen silinsin
-                } else {
-                    updatedState[itemNameToRemove].quantity = newQuantity;
-                }
+        case "REMOVE_ITEM": {
+            const { productId } = action.payload;
+            const current = state[productId];
+            if (!current) return state;
+
+            // Immutable update: never change the existing objects in place.
+            const next = { ...state };
+            if (current.quantity <= 1) {
+                delete next[productId];
+            } else {
+                next[productId] = { ...current, quantity: current.quantity - 1 };
             }
-            return updatedState;
+            return next;
+        }
 
         case "CLEAR_ORDERS":
-            // Tüm siparişleri temizliyoruz
             return {};
 
         default:
@@ -39,12 +37,10 @@ const orderReducer = (state, action) => {
     }
 };
 
-// Context ve dispatch
 const OrderContext = createContext();
 
 export const useOrders = () => useContext(OrderContext);
 
-// Provider component
 export const OrderProvider = ({ children }) => {
     const [orders, dispatch] = useReducer(orderReducer, initialState);
 
