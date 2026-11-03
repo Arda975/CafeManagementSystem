@@ -1,0 +1,19 @@
+# .NET
+bin/
+obj/
+.vs/
+*.user
+*.suo
+appsettings.*.local.json
+
+# Uploaded product images (runtime data)
+api/AmedimCafeApi/AmedimCafeApi/wwwroot/uploads/
+
+# Node
+node_modules/
+dist/
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
