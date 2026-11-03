@@ -21,11 +21,22 @@ public static class DbInitializer
         if (applyMigrations)
             await db.Database.MigrateAsync();
 
+        var username = config["SeedAdmin:Username"] ?? "admin";
+        var password = config["SeedAdmin:Password"];
+        var resetRequested = config.GetValue("SeedAdmin:ResetPassword", false);
+        var hasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher<User>>();
+
+        // Forgotten-password recovery. Deliberately config-only (no HTTP endpoint): only someone
+        // with access to the server's user secrets / environment can trigger it.
+        if (resetRequested)
+        {
+            await ResetAdminPasswordAsync(db, hasher, logger, username, password);
+            return;
+        }
+
         if (await db.Users.AnyAsync())
             return;
 
-        var username = config["SeedAdmin:Username"] ?? "admin";
-        var password = config["SeedAdmin:Password"];
         if (string.IsNullOrWhiteSpace(password))
         {
             logger.LogWarning(
@@ -35,10 +46,37 @@ public static class DbInitializer
         }
 
         var admin = new User { Username = username, Role = UserRole.Admin };
-        admin.PasswordHash = scope.ServiceProvider.GetRequiredService<IPasswordHasher<User>>().HashPassword(admin, password);
+        admin.PasswordHash = hasher.HashPassword(admin, password);
         db.Users.Add(admin);
         await db.SaveChangesAsync();
 
         logger.LogInformation("Created initial admin user '{Username}'.", username);
+    }
+
+    private static async Task ResetAdminPasswordAsync(
+        CafeDbContext db, IPasswordHasher<User> hasher, ILogger logger, string username, string? password)
+    {
+        if (string.IsNullOrWhiteSpace(password) || password.Length < 6)
+        {
+            logger.LogError(
+                "SeedAdmin:ResetPassword is true but SeedAdmin:Password is missing or shorter than 6 characters; " +
+                "admin password was NOT reset.");
+            return;
+        }
+
+        var user = await db.Users.SingleOrDefaultAsync(u => u.Username == username);
+        if (user is null)
+        {
+            user = new User { Username = username, Role = UserRole.Admin };
+            db.Users.Add(user);
+        }
+
+        user.Role = UserRole.Admin;
+        user.PasswordHash = hasher.HashPassword(user, password);
+        await db.SaveChangesAsync();
+
+        logger.LogWarning(
+            "Password for admin user '{Username}' was reset from SeedAdmin:Password. " +
+            "Now turn the reset off: dotnet user-secrets remove \"SeedAdmin:ResetPassword\"", username);
     }
 }

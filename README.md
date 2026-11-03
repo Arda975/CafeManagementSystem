@@ -72,6 +72,18 @@ dotnet user-secrets set "SeedAdmin:Password" "YOUR_ADMIN_PASSWORD"
 
 The first admin user (`admin`) is created at startup when the Users table is empty.
 
+**Forgot the admin password?** There is deliberately no web endpoint for this; recovery requires
+access to the machine running the API:
+
+```bash
+dotnet user-secrets set "SeedAdmin:Password" "NEW_PASSWORD"   # min. 6 characters
+dotnet user-secrets set "SeedAdmin:ResetPassword" "true"
+dotnet run --launch-profile http       # log: "Password for admin user 'admin' was reset ..."
+dotnet user-secrets remove "SeedAdmin:ResetPassword"          # turn it off again
+```
+
+This also re-creates the `admin` user (with the Admin role) if it was deleted.
+
 ### 2. Database
 
 ```bash
